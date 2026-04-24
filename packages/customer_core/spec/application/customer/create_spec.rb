@@ -1,4 +1,4 @@
-RSpec.describe CustomerCore::Application::UseCases::CreateCustomer do
+RSpec.describe CustomerCore::Application::UseCases::Customer::Create do
   let(:repo) { double }
   let(:event_bus) { double }
 
