@@ -76,3 +76,7 @@ gem "rubycritic", "~> 5.0", group: :development
 gem "reek", "~> 6.5", group: :development
 
 gem "simplecov", "~> 0.22.0", group: :test
+
+gem "bullet", "~> 8.1", group: :development
+
+gem "rack-mini-profiler", "~> 4.0", group: :development
