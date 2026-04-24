@@ -67,3 +67,10 @@ gem "rspec-rails", "~> 8.0", groups: [:development, :test]
 
 gem "activeadmin", "~> 3.5"
 
+# Quality and Security
+
+gem "standard", "~> 1.35", group: :development
+
+gem "rubycritic", "~> 5.0", group: :development
+
+gem "reek", "~> 6.5", group: :development
