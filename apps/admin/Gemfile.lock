@@ -99,6 +99,7 @@ GEM
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
     base64 (0.3.0)
+    bcrypt (3.1.22)
     bcrypt_pbkdf (1.1.2)
     bigdecimal (4.1.2)
     bindex (0.8.1)
@@ -376,6 +377,18 @@ GEM
       actionpack (>= 7.0)
       railties (>= 7.0)
     rexml (3.4.4)
+    roda (3.103.0)
+      rack
+    rodauth (2.43.0)
+      roda (>= 2.6.0)
+      sequel (>= 4)
+    rodauth-model (0.4.0)
+      rodauth (~> 2.28)
+    rodauth-rails (2.1.2)
+      railties (>= 5.1)
+      roda (~> 3.76)
+      rodauth (~> 2.36)
+      rodauth-model (~> 0.2)
     rspec-core (3.13.6)
       rspec-support (~> 3.13.0)
     rspec-expectations (3.13.5)
@@ -444,6 +457,11 @@ GEM
       tty-which (~> 0.5.0)
       virtus (~> 2.0)
     securerandom (0.4.1)
+    sequel (5.103.0)
+      bigdecimal
+    sequel-activerecord_connection (2.0.1)
+      activerecord (>= 5.1)
+      sequel (~> 5.38)
     sexp_processor (4.17.5)
     simplecov (0.22.0)
       docile (~> 1.1)
@@ -492,6 +510,7 @@ GEM
     thor (1.5.0)
     thread_safe (0.3.6)
     thruster (0.1.20)
+    tilt (2.7.0)
     timeout (0.6.1)
     tsort (0.2.0)
     tty-which (0.5.0)
@@ -535,6 +554,7 @@ PLATFORMS
 DEPENDENCIES
   activeadmin (~> 3.5)
   annotate (~> 2.6)
+  bcrypt (~> 3.1)
   bootsnap
   brakeman
   bullet (~> 8.1)
@@ -553,9 +573,11 @@ DEPENDENCIES
   rack-mini-profiler (~> 4.0)
   rails (~> 8.1.3)
   reek (~> 6.5)
+  rodauth-rails (~> 2.1)
   rspec-rails (~> 8.0)
   rubocop-rails-omakase
   rubycritic (~> 5.0)
+  sequel-activerecord_connection (~> 2.0)
   simplecov (~> 0.22.0)
   solid_cable
   solid_cache
@@ -563,6 +585,7 @@ DEPENDENCIES
   standard (~> 1.35)
   stimulus-rails
   thruster
+  tilt (~> 2.4)
   turbo-rails
   tzinfo-data
   vite_rails (~> 3.10)
@@ -588,6 +611,7 @@ CHECKSUMS
   ast (2.4.3) sha256=954615157c1d6a382bc27d690d973195e79db7f55e9765ac7c481c60bdb4d383
   axiom-types (0.1.1) sha256=c1ff113f3de516fa195b2db7e0a9a95fd1b08475a502ff660d04507a09980383
   base64 (0.3.0) sha256=27337aeabad6ffae05c265c450490628ef3ebd4b67be58257393227588f5a97b
+  bcrypt (3.1.22) sha256=1f0072e88c2d705d94aff7f2c5cb02eb3f1ec4b8368671e19112527489f29032
   bcrypt_pbkdf (1.1.2) sha256=c2414c23ce66869b3eb9f643d6a3374d8322dfb5078125c82792304c10b94cf6
   bigdecimal (4.1.2) sha256=53d217666027eab4280346fba98e7d5b66baaae1b9c3c1c0ffe89d48188a3fbd
   bindex (0.8.1) sha256=7b1ecc9dc539ed8bccfc8cb4d2732046227b09d6f37582ff12e50a5047ceb17e
@@ -702,6 +726,10 @@ CHECKSUMS
   reline (0.6.3) sha256=1198b04973565b36ec0f11542ab3f5cfeeec34823f4e54cebde90968092b1835
   responders (3.2.0) sha256=89c2d6ac0ae16f6458a11524cae4a8efdceba1a3baea164d28ee9046bd3df55a
   rexml (3.4.4) sha256=19e0a2c3425dfbf2d4fc1189747bdb2f849b6c5e74180401b15734bc97b5d142
+  roda (3.103.0) sha256=d9757aad086d4cb622883b38bc48bbf160217b6dce2e08641dfeb1ab72bd7d4a
+  rodauth (2.43.0) sha256=4dc5f5c6b8013502352beb342f72b64515680af2f95603f7248031fd9203984a
+  rodauth-model (0.4.0) sha256=dc28eb1863f0b8facb1afe2ea6b1e1159821c32989eea237d2a41c287f958c1e
+  rodauth-rails (2.1.2) sha256=012ffa9f7a2b7d6c768324fb9a99508d198867eb321edd8a3591b066e096f194
   rspec-core (3.13.6) sha256=a8823c6411667b60a8bca135364351dda34cd55e44ff94c4be4633b37d828b2d
   rspec-expectations (3.13.5) sha256=33a4d3a1d95060aea4c94e9f237030a8f9eae5615e9bd85718fe3a09e4b58836
   rspec-mocks (3.13.8) sha256=086ad3d3d17533f4237643de0b5c42f04b66348c28bf6b9c2d3f4a3b01af1d47
@@ -718,6 +746,8 @@ CHECKSUMS
   ruby_parser (3.22.0) sha256=1eb4937cd9eb220aa2d194e352a24dba90aef00751e24c8dfffdb14000f15d23
   rubycritic (5.0.0) sha256=7f3877556d7f52bf0980496b7c907a827a9592ba690b80a593403a60bd6cfb42
   securerandom (0.4.1) sha256=cc5193d414a4341b6e225f0cb4446aceca8e50d5e1888743fac16987638ea0b1
+  sequel (5.103.0) sha256=51bf23374cc585724fc51a2ae8b95283422c97ca4585ce28f3db27a26ce55a69
+  sequel-activerecord_connection (2.0.1) sha256=8a13dc466520788459af18bb267f5e57d37b8764daaa3f6e8bc2932ce2642e15
   sexp_processor (4.17.5) sha256=ae2b48ba98353d5d465ce8759836b7a05f2e12c5879fcd14d7815b026de32f0e
   simplecov (0.22.0) sha256=fe2622c7834ff23b98066bb0a854284b2729a569ac659f82621fc22ef36213a5
   simplecov-html (0.13.2) sha256=bd0b8e54e7c2d7685927e8d6286466359b6f16b18cb0df47b508e8d73c777246
@@ -734,6 +764,7 @@ CHECKSUMS
   thor (1.5.0) sha256=e3a9e55fe857e44859ce104a84675ab6e8cd59c650a49106a05f55f136425e73
   thread_safe (0.3.6) sha256=9ed7072821b51c57e8d6b7011a8e282e25aeea3a4065eab326e43f66f063b05a
   thruster (0.1.20) sha256=c05f2fbcae527bbe093a6e6d84fb12d9d680617e7c162325d9b97e8e9d4b5201
+  tilt (2.7.0) sha256=0d5b9ba69f6a36490c64b0eee9f6e9aad517e20dcc848800a06eb116f08c6ab3
   timeout (0.6.1) sha256=78f57368a7e7bbadec56971f78a3f5ecbcfb59b7fcbb0a3ed6ddc08a5094accb
   tsort (0.2.0) sha256=9650a793f6859a43b6641671278f79cfead60ac714148aabe4e3f0060480089f
   tty-which (0.5.0) sha256=5824055f0d6744c97e7c4426544f01d519c40d1806ef2ef47d9854477993f466
