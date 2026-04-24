@@ -1,5 +1,3 @@
-# apps/admin/spec/requests/create_customer_spec.rb
-
 require "rails_helper"
 
 RSpec.describe "CreateCustomer", type: :request do
