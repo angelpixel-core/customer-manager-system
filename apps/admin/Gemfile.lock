@@ -174,6 +174,8 @@ GEM
       tzinfo
     faker (3.8.0)
       i18n (>= 1.8.11, < 2)
+    faktory_worker_ruby (2.2.0)
+      connection_pool (< 4)
     ffi (1.17.4)
     flay (2.14.4)
       erubi (~> 1.10)
@@ -563,6 +565,7 @@ DEPENDENCIES
   debug
   dotenv-rails (~> 3.2)
   faker (~> 3.8)
+  faktory_worker_ruby (~> 2.2)
   image_processing (~> 1.2)
   jbuilder
   jsbundling-rails
@@ -648,6 +651,7 @@ CHECKSUMS
   erubi (1.13.1) sha256=a082103b0885dbc5ecf1172fede897f9ebdb745a4b97a5e8dc63953db1ee4ad9
   et-orbi (1.4.0) sha256=6c7e3c90779821f9e3b324c5e96fda9767f72995d6ae435b96678a4f3e2de8bc
   faker (3.8.0) sha256=c147b308df73a90f27a4fc84f18d4c22ef0ad9c2a64b2b61c86fd0ca71753efc
+  faktory_worker_ruby (2.2.0) sha256=8222041ca58814a6d63aebcd9af036522160ffcacfe2100b2d9d0de5c50c60f9
   ffi (1.17.4) sha256=bcd1642e06f0d16fc9e09ac6d49c3a7298b9789bcb58127302f934e437d60acf
   flay (2.14.4) sha256=a62d96a51d1da185aa41ba95b696966df9f7d1d91a457709277f24515895de77
   flog (4.9.4) sha256=12cc054fab7a2cbd2a906514397c4d7788954d530564782d6f14939dc2dfbcbb
