@@ -537,6 +537,7 @@ DEPENDENCIES
   rspec-rails (~> 8.0)
   rubocop-rails-omakase
   rubycritic (~> 5.0)
+  simplecov (~> 0.22.0)
   solid_cable
   solid_cache
   solid_queue
