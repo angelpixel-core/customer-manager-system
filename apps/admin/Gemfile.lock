@@ -1,3 +1,8 @@
+PATH
+  remote: ../../packages/customer_core
+  specs:
+    customer_core (0.1.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -562,6 +567,7 @@ DEPENDENCIES
   bullet (~> 8.1)
   bundler-audit
   cssbundling-rails
+  customer_core!
   debug
   dotenv-rails (~> 3.2)
   faker (~> 3.8)
@@ -630,6 +636,7 @@ CHECKSUMS
   crass (1.0.6) sha256=dc516022a56e7b3b156099abc81b6d2b08ea1ed12676ac7a5657617f012bd45d
   cssbundling-rails (1.4.3) sha256=53aecd5a7d24ac9c8fcd92975acd0e830fead4ee4583d3d3d49bb64651946e41
   csv (3.3.5) sha256=6e5134ac3383ef728b7f02725d9872934f523cb40b961479f69cf3afa6c8e73f
+  customer_core (0.1.0)
   date (3.5.1) sha256=750d06384d7b9c15d562c76291407d89e368dda4d4fff957eb94962d325a0dc0
   debug (1.11.1) sha256=2e0b0ac6119f2207a6f8ac7d4a73ca8eb4e440f64da0a3136c30343146e952b6
   descendants_tracker (0.0.4) sha256=e9c41dd4cfbb85829a9301ea7e7c48c2a03b26f09319db230e6479ccdc780897
