@@ -2,6 +2,7 @@ PATH
   remote: ../../packages/customer_core
   specs:
     customer_core (0.1.0)
+      zeitwerk (~> 2.6)
 
 GEM
   remote: https://rubygems.org/
