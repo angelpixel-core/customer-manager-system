@@ -2,7 +2,7 @@ RSpec.describe CustomerCore::Application::UseCases::Customer::Create do
   let(:repo) { double }
   let(:event_bus) { double }
 
-  it "🔴 creates customer and publishes event" do
+  it "creates customer and publishes event" do
     expect(repo).to receive(:create)
     expect(event_bus).to receive(:publish)
 

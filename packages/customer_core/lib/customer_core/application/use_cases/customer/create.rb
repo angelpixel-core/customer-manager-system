@@ -14,7 +14,7 @@ module CustomerCore
             @repo.create(customer)
 
             @event_bus.publish(
-              Events::CustomerCreated.new(customer)
+              Events::Customer::Created.new(customer)
             )
 
             customer
