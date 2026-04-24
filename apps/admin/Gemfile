@@ -64,3 +64,6 @@ end
 gem "vite_rails", "~> 3.10"
 
 gem "rspec-rails", "~> 8.0", groups: [:development, :test]
+
+gem "activeadmin", "~> 3.5"
+
