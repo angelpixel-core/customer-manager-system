@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "CreateCustomer", type: :request do
-  it "🔴 creates a customer and triggers async flow" do
+  it "creates a customer and triggers async flow" do
     expect {
       post "/admin/customers", params: {
         name: "Angel",
