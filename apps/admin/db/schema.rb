@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_24_162451) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_24_210000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -58,6 +58,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_24_162451) do
     t.index ["author_type", "author_id"], name: "index_active_admin_comments_on_author"
     t.index ["namespace"], name: "index_active_admin_comments_on_namespace"
     t.index ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource"
+  end
+
+  create_table "customer_records", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "email", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_customer_records_on_email", unique: true
   end
 
   add_foreign_key "account_login_change_keys", "accounts", column: "id"

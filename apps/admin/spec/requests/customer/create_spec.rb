@@ -7,7 +7,7 @@ RSpec.describe "CreateCustomer", type: :request do
         name: "Angel",
         email: "test@mail.com"
       }
-    }.to change(CustomerRecord, :count).by(1)
+    }.to change(Customer::Record, :count).by(1)
 
     expect(response).to have_http_status(:redirect)
   end
