@@ -80,3 +80,9 @@ gem "simplecov", "~> 0.22.0", group: :test
 gem "bullet", "~> 8.1", group: :development
 
 gem "rack-mini-profiler", "~> 4.0", group: :development
+
+gem "dotenv-rails", "~> 3.2", groups: [:development, :test]
+
+gem "annotate", "~> 2.6", group: :development
+
+gem "faker", "~> 3.8", groups: [:development, :test]
