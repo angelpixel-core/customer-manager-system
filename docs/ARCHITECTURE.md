@@ -37,6 +37,90 @@ repo/
 │   └── DECISIONS/
 ```
 
+# 🧭 North-Star Architecture (Target)
+
+This section defines the target architecture for medium-term evolution.
+The sections below document the current implementation state.
+
+```
+repo/
+├── apps/
+│   └── admin/
+│       ├── app/
+│       │   ├── controllers/
+│       │   ├── models/                     # ActiveRecord only
+│       │   ├── admin/infrastructure/       # adapters (repo/event bus)
+│       │   ├── workers/admin/infrastructure/
+│       │   ├── services/                   # optional orchestration
+│       │   └── presenters/
+│       ├── config/
+│       │   ├── initializers/
+│       │   │   ├── customer_core.rb        # dependency wiring
+│       │   │   ├── faktory.rb
+│       │   │   └── rodauth.rb
+│       │   └── routes.rb
+│       └── db/
+│           ├── migrate/
+│           ├── schema.rb
+│           └── seeds.rb
+│
+├── packages/
+│   └── customer_core/
+│       ├── lib/
+│       │   ├── customer_core.rb            # Zeitwerk entrypoint
+│       │   └── customer_core/
+│       │       ├── version.rb
+│       │       ├── domain/                 # pure business rules
+│       │       │   ├── customer.rb
+│       │       │   ├── value_objects/
+│       │       │   ├── policies/
+│       │       │   └── services/
+│       │       ├── application/            # use cases + ports
+│       │       │   ├── use_cases/
+│       │       │   │   └── customer/
+│       │       │   │       ├── create.rb
+│       │       │   │       ├── update.rb
+│       │       │   │       └── delete.rb
+│       │       │   ├── commands/
+│       │       │   ├── queries/
+│       │       │   ├── interfaces/
+│       │       │   │   ├── repositories/
+│       │       │   │   ├── event_bus.rb
+│       │       │   │   ├── notifier.rb
+│       │       │   │   └── logger.rb
+│       │       │   └── dto/
+│       │       └── events/
+│       │           └── customer/
+│       │               ├── created.rb
+│       │               ├── updated.rb
+│       │               └── deleted.rb
+│       ├── spec/
+│       │   ├── domain/
+│       │   └── application/
+│       └── customer_core.gemspec
+│
+├── platform/
+│   ├── events/
+│   ├── observability/
+│   └── integrations/
+│
+└── docs/
+    ├── ARCHITECTURE.md
+    ├── DEMO_RUNBOOK.md
+    └── DECISIONS/
+```
+
+North-star naming:
+
+```rb
+CustomerCore::Domain::Customer
+CustomerCore::Application::UseCases::Customer::Create
+CustomerCore::Application::Interfaces::Repositories::CustomerRepository
+CustomerCore::Events::Customer::Created
+Admin::Infrastructure::Repositories::ActiveRecord::CustomerRepository
+Admin::Infrastructure::Events::FaktoryEventBus
+```
+
 # 🧬 📦 Domain Package (customer_core)
 
 ```
@@ -46,41 +130,21 @@ packages/customer_core/
 │
 │   └── customer_core/
 │       ├── version.rb
-│
-│       # 🧠 DOMAIN (pure)
 │       ├── domain/
-│       │   ├── customer.rb
-│       │   ├── value_objects/
-│       │   ├── policies/
-│       │   └── services/
-│
-│       # 🎯 APPLICATION (use cases)
+│       │   └── customer.rb
 │       ├── application/
-│       │   ├── use_cases/
-│       │   │   ├── create_customer.rb
-│       │   │   ├── update_customer.rb
-│       │   │   └── delete_customer.rb
-│       │
-│       │   ├── commands/
-│       │   ├── queries/
-│       │
-│       │   ├── interfaces/           # PORTS
-│       │   │   ├── repositories/
-│       │   │   ├── event_bus.rb
-│       │   │   ├── notifier.rb
-│       │   │   └── logger.rb
-│       │
-│       │   └── dto/
-│
-│       # 📡 EVENTS (domain events)
-│       ├── events/
-│       │   ├── customer_created.rb
-│       │   ├── customer_updated.rb
-│       │   └── customer_deleted.rb
+│       │   └── use_cases/
+│       │       └── customer/
+│       │           └── create.rb
+│       └── events/
+│           └── customer/
+│               └── created.rb
 │
 │       # 🔌 NO infrastructure here (important)
 │
 ├── spec/                             # pure domain tests (no Rails)
+│   ├── domain/customer/customer_spec.rb
+│   └── application/customer/create_spec.rb
 ├── customer_core.gemspec
 ```
 
@@ -88,9 +152,8 @@ packages/customer_core/
 
 ```rb
 CustomerCore::Domain::Customer
-CustomerCore::Application::UseCases::CreateCustomer
-CustomerCore::Application::Interfaces::CustomerRepository
-CustomerCore::Events::CustomerCreated
+CustomerCore::Application::UseCases::Customer::Create
+CustomerCore::Events::Customer::Created
 ```
 
 # 🚀 🧩 Rails App (apps/admin)
@@ -99,34 +162,25 @@ CustomerCore::Events::CustomerCreated
 apps/admin/
 ├── app/
 │   ├── controllers/
-│   │   └── admin/
-│
-│   ├── admin/                        # ActiveAdmin
-│
-│   ├── models/                       # ActiveRecord ONLY
-│
-│   ├── repositories/                 # adapters
-│   │   └── active_record/
-│
-│   ├── events/                       # adapters
-│   │   ├── sync_event_bus.rb
-│   │   └── faktory_event_bus.rb
-│
-│   ├── workers/                      # Faktory workers
-│
-│   ├── services/                     # orchestration (optional)
-│
-│   ├── integrations/
-│   │   ├── n8n/
-│   │   └── webhooks/
-│
-│   └── presenters/
+│   │   └── customers_controller.rb
+│   ├── models/
+│   │   └── customer/record.rb
+│   ├── admin/
+│   │   └── infrastructure/
+│   │       ├── repositories/active_record/customer_repository.rb
+│   │       └── events/faktory_event_bus.rb
+│   └── workers/
+│       └── admin/infrastructure/send_welcome_email_worker.rb
 │
 ├── config/
 │   ├── initializers/
-│   │   ├── customer_core.rb          # wiring dependencies
 │   │   ├── faktory.rb
 │   │   └── rodauth.rb
+│   └── routes.rb
+├── db/
+│   ├── migrate/
+│   ├── schema.rb
+│   └── seeds.rb
 ```
 
 # 🔌 🧠 Dependency Wiring (CRITICAL)
