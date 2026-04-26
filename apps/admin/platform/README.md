@@ -3,12 +3,11 @@
 This directory contains local infrastructure assets for `apps/admin`.
 
 Hybrid workflow (recommended):
-- Run infra in Docker (`postgres`, `faktory`)
+- Run infra in Docker (`postgres`, `worker`)
 - Run Rails/Vite/worker locally
 
 Environment files:
-- Runtime local app (recommended): `apps/admin/.envrc` loading `platform/.../env`
-- Runtime local app (fallback): `apps/admin/.env`
+- Runtime local app: `apps/admin/.env`
 - Docker infra compose: `apps/admin/platform/environments/local/env/dev/*.env`
 
 The `PROJECT_DB_PREFIX` default is `customers_manager_system`.
@@ -21,13 +20,13 @@ From `apps/admin/platform/environments/local`:
 cp -n env/dev/db.env.example env/dev/db.env
 cp -n env/dev/worker.env.example env/dev/worker.env
 cp -n env/dev/app.env.example env/dev/app.env
-docker compose up -d db faktory
+docker compose up -d db worker
 ```
 
 To use a specific env profile (default is `dev`):
 
 ```sh
-ENV_PROFILE=dev docker compose up -d db faktory
+ENV_PROFILE=dev docker compose up -d db worker
 ```
 
 ## App runtime (local)
@@ -35,15 +34,9 @@ ENV_PROFILE=dev docker compose up -d db faktory
 From `apps/admin`:
 
 ```sh
-direnv allow
+cp .env.template .env
 bundle exec rails db:prepare
 bin/dev
-```
-
-If you do not use `direnv`, fallback to:
-
-```sh
-cp .env.template .env
 ```
 
 If you are not using Procfile tooling, run worker in a separate terminal:

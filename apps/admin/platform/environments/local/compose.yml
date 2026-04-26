@@ -15,9 +15,9 @@ services:
       timeout: 5s
       retries: 20
 
-  faktory:
+  worker:
     image: contribsys/faktory:latest
-    container_name: admin-faktory
+    container_name: admin-worker
     env_file:
       - ./env/${ENV_PROFILE:-dev}/worker.env
     ports:
