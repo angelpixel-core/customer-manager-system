@@ -1,0 +1,11 @@
+/*
+ * Temporary ActiveAdmin stylesheet placeholder for Propshaft.
+ *
+ * ActiveAdmin's default generated stylesheet is SCSS (`active_admin.scss`),
+ * but Propshaft does not transpile SCSS by default.
+ * This file prevents runtime 500 errors caused by missing `active_admin.css`.
+ */
+
+body.active_admin {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
