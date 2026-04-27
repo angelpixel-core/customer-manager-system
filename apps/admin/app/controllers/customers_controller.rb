@@ -1,7 +1,9 @@
 class CustomersController < ApplicationController
+  before_action :authenticate_admin
+
   # @return [void]
   def index
-    head :ok
+    @customers = Customer::Record.order(created_at: :desc).limit(20)
   end
 
   # @return [void]
