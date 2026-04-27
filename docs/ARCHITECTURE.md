@@ -93,7 +93,7 @@ repo/
 │       │       │   │   ├── events/publisher.rb
 │       │       │   │   ├── events/dead_letter_store.rb
 │       │       │   │   ├── events/event_bus.rb     # facade estable sobre Publisher (implemented)
-│       │       │   │   ├── notifier.rb             # TODO: pendiente implementar puerto de notificaciones/integraciones
+│       │       │   │   ├── notifier.rb
 │       │       │   │   └── logger.rb
 │       │       │   └── dto/
 │       │       └── events/
@@ -125,6 +125,7 @@ CustomerCore::Application::UseCases::Customer::Create
 CustomerCore::Application::Interfaces::Customer::Repository
 CustomerCore::Application::Interfaces::Events::EventBus
 CustomerCore::Application::Interfaces::Events::Publisher
+CustomerCore::Application::Interfaces::Notifier
 CustomerCore::Events::Customer::Created
 Admin::Infrastructure::Repositories::ActiveRecord::CustomerRepository
 Admin::Infrastructure::Events::FaktoryEventBus
@@ -281,12 +282,15 @@ packages/customer_core/lib/customer_core/application/interfaces/
 │   ├── publisher.rb
 │   ├── dead_letter_store.rb
 │   └── event_bus.rb
+├── notifier.rb
 └── logger.rb
 
 apps/admin/app/admin/infrastructure/
 ├── events/
 │   ├── faktory_event_bus.rb
 │   └── rails_dead_letter_store.rb
+├── notifications/
+│   └── rails_notifier.rb
 └── logging/
     └── rails_logger.rb
 ```
