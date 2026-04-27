@@ -156,6 +156,32 @@ CustomerCore::Application::UseCases::Customer::Create
 CustomerCore::Events::Customer::Created
 ```
 
+# 🧰 Callable Interface (`#call`)
+
+Use `#call` as the standard interface for action objects.
+
+Apply to:
+
+- `packages/customer_core/.../application/use_cases/**`
+- delivery-layer orchestration services (if introduced)
+
+Do not force `#call` in:
+
+- domain entities/value objects
+- repositories/events
+- workers (`perform`)
+- ActiveRecord models
+
+Callable convention:
+
+```rb
+class SomeAction
+  def self.call(...)
+    new(...).call
+  end
+end
+```
+
 # 🚀 🧩 Rails App (apps/admin)
 
 ```
