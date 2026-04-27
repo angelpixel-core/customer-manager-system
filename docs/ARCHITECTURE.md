@@ -297,7 +297,13 @@ apps/admin/app/admin/infrastructure/
 apps/admin/lib/platform/events/
 ├── event.rb
 ├── event_bus.rb
-└── registry.rb
+├── registry.rb
+├── retry_handler.rb
+├── dead_letter_queue.rb
+└── metrics.rb
+
+apps/admin/app/models/platform/events/
+└── dead_letter_record.rb
 ```
 
 ## Target / pending
@@ -310,10 +316,10 @@ platform/events/
 │   └── in_memory_event_bus.rb            # TODO: pendiente implementación para desarrollo/tests integrados
 ├── async/
 │   ├── faktory_event_bus.rb              # TODO: pendiente mover/adaptar desde admin/infrastructure/events/faktory_event_bus.rb
-│   └── retry_handler.rb                  # TODO: pendiente política de retries centralizada
+│   └── retry_handler.rb                  # TODO: pendiente mover/adaptar desde apps/admin/lib/platform/events/retry_handler.rb
 ├── serializers/                          # TODO: pendiente serialización de integration events
-├── registry/                             # TODO: pendiente registro/descubrimiento de handlers
-└── dead_letter_queue/                    # TODO: pendiente estrategia persistente de DLQ
+├── registry/                             # TODO: pendiente mover/adaptar desde apps/admin/lib/platform/events/registry.rb
+└── dead_letter_queue/                    # TODO: pendiente mover/adaptar desde apps/admin/lib/platform/events/dead_letter_queue.rb
 ```
 
 # 🧠 Flow
