@@ -189,6 +189,51 @@ apps/admin/
 apps/admin/config/initializers/customer_core.rb
 ```
 
+# 🎨 UI Layout Foundation (Current)
+
+The `feat(ui): add clean application layout foundation` commit introduced
+the first reusable visual foundation for non-ActiveAdmin pages in `apps/admin`.
+
+## Scope
+
+- Keep business flow unchanged (only presentation layer changes)
+- Centralize frontend CSS entry through Vite
+- Establish a layered style architecture (tokens → reset → layout → primitives → utilities)
+
+## Files and Conventions
+
+```
+apps/admin/app/frontend/
+├── entrypoints/
+│   └── application.js                # imports ../styles/application.css
+└── styles/
+    ├── application.css               # root style entrypoint
+    ├── base/
+    │   ├── _index.css                # base import order
+    │   ├── _variables.css            # design tokens (spacing, radius, shadows)
+    │   ├── _theme.css                # semantic color palette
+    │   ├── _reset.css                # global reset + motion accessibility
+    │   ├── _layout.css               # app-shell, topbar, container, form defaults
+    │   └── primitives/
+    │       ├── _button.css
+    │       ├── _link.css
+    │       └── _nav.css
+    └── utilities/
+        └── _index.css
+```
+
+## Layout Contract
+
+`apps/admin/app/views/layouts/application.html.erb` now renders a shell with:
+
+- `.app-shell`
+- `.app-topbar` (brand + primary nav)
+- `.app-main`
+- `.app-container`
+- `.surface-card`
+
+This is the baseline contract for upcoming componentization work (ViewComponent + Lookbook).
+
 # ⚡ 📡 Event System (SYNC + ASYNC)
 
 ```sh
