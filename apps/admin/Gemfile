@@ -64,6 +64,9 @@ end
 gem "vite_rails", "~> 3.10"
 
 gem "rspec-rails", "~> 8.0", groups: [:development, :test]
+gem "capybara", "~> 3.40", group: :test
+gem "cucumber-rails", "~> 3.1", require: false, group: :test
+gem "database_cleaner-active_record", "~> 2.2", group: :test
 
 gem "activeadmin", "~> 3.5"
 
@@ -84,6 +87,7 @@ gem "rack-mini-profiler", "~> 4.0", group: :development
 gem "dotenv-rails", "~> 3.2", groups: [:development, :test]
 
 gem "annotate", "~> 2.6", group: :development
+gem "yard", "~> 0.9.37", group: :development
 
 gem "faker", "~> 3.8", groups: [:development, :test]
 
