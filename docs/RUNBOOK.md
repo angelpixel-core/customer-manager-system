@@ -90,16 +90,43 @@ Opcional: revisar UI de Faktory en `http://localhost:7420`.
 
 ## 6) Verificacion de tests
 
-Admin:
+Gate por capas (en orden):
+
+1) Core (unit/use-case):
+
+```bash
+cd ../../packages/customer_core
+bundle exec rspec
+```
+
+2) Admin adapters (integration):
+
+```bash
+cd ../../apps/admin
+bundle exec rspec spec/requests/customer/create_spec.rb
+```
+
+3) Platform events (routing/retry/DLQ):
+
+```bash
+bundle exec rspec spec/platform/events
+```
+
+4) Integration serializers + forwarder:
+
+```bash
+bundle exec rspec spec/platform/integrations
+```
+
+5) E2E app flow (`CustomerCreated -> publisher -> worker -> integration forwarder`):
 
 ```bash
 bundle exec rspec spec/requests/customer/create_spec.rb
 ```
 
-Core:
+Suite completa admin:
 
 ```bash
-cd ../../packages/customer_core
 bundle exec rspec
 ```
 
