@@ -1,8 +1,10 @@
 class CustomersController < ApplicationController
+  # @return [void]
   def index
     head :ok
   end
 
+  # @return [void]
   def create
     use_case = CustomerCore::Application::UseCases::Customer::Create.new(
       repo: Admin::Infrastructure::Repositories::ActiveRecord::CustomerRepository.new,
@@ -16,6 +18,7 @@ class CustomersController < ApplicationController
 
   private
 
+  # @return [Hash]
   def customer_params
     params.permit(:name, :email).to_h.symbolize_keys
   end

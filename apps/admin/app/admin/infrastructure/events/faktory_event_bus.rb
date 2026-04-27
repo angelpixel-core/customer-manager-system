@@ -1,7 +1,10 @@
 module Admin
   module Infrastructure
     module Events
+      # Faktory-backed event bus adapter.
       class FaktoryEventBus
+        # @param event [Object]
+        # @return [void]
         def publish(event)
           case event
           when CustomerCore::Events::Customer::Created
