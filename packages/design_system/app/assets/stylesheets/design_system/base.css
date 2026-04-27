@@ -1,0 +1,10 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--ds-font-sans);
+  color: var(--ds-color-text);
+  background: var(--ds-color-bg);
+}

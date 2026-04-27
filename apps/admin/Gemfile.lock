@@ -4,6 +4,13 @@ PATH
     customer_core (0.1.0)
       zeitwerk (~> 2.6)
 
+PATH
+  remote: ../../packages/design_system
+  specs:
+    design_system (0.1.0)
+      rails (>= 8.1)
+      view_component (>= 3.24)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -314,6 +321,7 @@ GEM
     marcel (1.1.0)
     matrix (0.4.3)
     memoist3 (1.0.0)
+    method_source (1.1.0)
     mini_magick (5.3.1)
       logger
     mini_mime (1.1.5)
@@ -581,6 +589,10 @@ GEM
     uniform_notifier (1.18.0)
     uri (1.1.1)
     useragent (0.16.11)
+    view_component (3.24.0)
+      activesupport (>= 5.2.0, < 8.2)
+      concurrent-ruby (~> 1)
+      method_source (~> 1.0)
     virtus (2.0.0)
       axiom-types (~> 0.1)
       coercible (~> 1.0)
@@ -624,6 +636,7 @@ DEPENDENCIES
   customer_core!
   database_cleaner-active_record (~> 2.2)
   debug
+  design_system!
   dotenv-rails (~> 3.2)
   faker (~> 3.8)
   faktory_worker_ruby (~> 2.2)
@@ -652,6 +665,7 @@ DEPENDENCIES
   tilt (~> 2.4)
   turbo-rails
   tzinfo-data
+  view_component (~> 3.22)
   vite_rails (~> 3.10)
   web-console
   yard (~> 0.9.37)
@@ -708,6 +722,7 @@ CHECKSUMS
   date (3.5.1) sha256=750d06384d7b9c15d562c76291407d89e368dda4d4fff957eb94962d325a0dc0
   debug (1.11.1) sha256=2e0b0ac6119f2207a6f8ac7d4a73ca8eb4e440f64da0a3136c30343146e952b6
   descendants_tracker (0.0.4) sha256=e9c41dd4cfbb85829a9301ea7e7c48c2a03b26f09319db230e6479ccdc780897
+  design_system (0.1.0)
   diff-lcs (1.6.2) sha256=9ae0d2cba7d4df3075fe8cd8602a8604993efc0dfa934cff568969efb1909962
   docile (1.4.1) sha256=96159be799bfa73cdb721b840e9802126e4e03dfc26863db73647204c727f21e
   dotenv (3.2.0) sha256=e375b83121ea7ca4ce20f214740076129ab8514cd81378161f11c03853fe619d
@@ -759,6 +774,7 @@ CHECKSUMS
   marcel (1.1.0) sha256=fdcfcfa33cc52e93c4308d40e4090a5d4ea279e160a7f6af988260fa970e0bee
   matrix (0.4.3) sha256=a0d5ab7ddcc1973ff690ab361b67f359acbb16958d1dc072b8b956a286564c5b
   memoist3 (1.0.0) sha256=686e42402cf150a362050c23143dc57b0ef88f8c344943ff8b7845792b50d56f
+  method_source (1.1.0) sha256=181301c9c45b731b4769bc81e8860e72f9161ad7d66dd99103c9ab84f560f5c5
   mini_magick (5.3.1) sha256=29395dfd76badcabb6403ee5aff6f681e867074f8f28ce08d78661e9e4a351c4
   mini_mime (1.1.5) sha256=8681b7e2e4215f2a159f9400b5816d85e9d8c6c6b491e96a12797e798f8bccef
   mini_portile2 (2.8.9) sha256=0cd7c7f824e010c072e33f68bc02d85a00aeb6fce05bb4819c03dfd3c140c289
@@ -858,6 +874,7 @@ CHECKSUMS
   uniform_notifier (1.18.0) sha256=4787785556f66f6418486da0f1d78b3239aaff98e2e7938fb05e2062b0ffce9d
   uri (1.1.1) sha256=379fa58d27ffb1387eaada68c749d1426738bd0f654d812fcc07e7568f5c57c6
   useragent (0.16.11) sha256=700e6413ad4bb954bb63547fa098dddf7b0ebe75b40cc6f93b8d54255b173844
+  view_component (3.24.0) sha256=ede4e9c0ca1605a9f6b74773b6e93de100807a4f057eae983d20acf069950aee
   virtus (2.0.0) sha256=8841dae4eb7fcc097320ba5ea516bf1839e5d056c61ee27138aa4bddd6e3d1c2
   vite_rails (3.10.0) sha256=8c4471554870c043e8d9ff7d379302a01d147ade2cd61476ddf020fed32a107a
   vite_ruby (3.10.2) sha256=db465451eb180abbdc81f596ba63671d2b2552e2bb7bf3c1f7b79f9d58ca9a86
