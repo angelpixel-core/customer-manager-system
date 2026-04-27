@@ -3,7 +3,7 @@ module Admin
     module Repositories
       module ActiveRecord
         # ActiveRecord adapter for persisting domain customers.
-        class CustomerRepository
+        class CustomerRepository < CustomerCore::Application::Interfaces::Customer::Repository
           # @param customer [CustomerCore::Domain::Customer]
           # @return [Customer::Record]
           def create(customer)

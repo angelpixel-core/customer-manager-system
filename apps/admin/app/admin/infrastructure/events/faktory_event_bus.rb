@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 module Admin
   module Infrastructure
     module Events
       # Faktory-backed event bus adapter.
-      class FaktoryEventBus
+      class FaktoryEventBus < CustomerCore::Application::Interfaces::Events::Publisher
         # @param event [Object]
         # @return [void]
         def publish(event)
