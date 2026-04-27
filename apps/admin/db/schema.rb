@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_24_210000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_27_172650) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -66,6 +66,22 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_24_210000) do
     t.string "name", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_customer_records_on_email", unique: true
+  end
+
+  create_table "platform_event_dead_letters", force: :cascade do |t|
+    t.jsonb "context", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.string "error_class", null: false
+    t.text "error_message", null: false
+    t.string "event_name", null: false
+    t.jsonb "event_payload", default: {}, null: false
+    t.datetime "failed_at", null: false
+    t.jsonb "metadata", default: {}, null: false
+    t.datetime "occurred_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["error_class"], name: "index_platform_event_dead_letters_on_error_class"
+    t.index ["event_name"], name: "index_platform_event_dead_letters_on_event_name"
+    t.index ["failed_at"], name: "index_platform_event_dead_letters_on_failed_at"
   end
 
   add_foreign_key "account_login_change_keys", "accounts", column: "id"
