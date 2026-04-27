@@ -42,6 +42,11 @@ repo/
 This section defines the target architecture for medium-term evolution.
 The sections below document the current implementation state.
 
+Status convention in this document:
+
+- `Implemented today`: already in code and used in runtime flow.
+- `Target / pending`: planned architecture not fully implemented yet.
+
 ```
 repo/
 ├── apps/
@@ -49,7 +54,7 @@ repo/
 │       ├── app/
 │       │   ├── controllers/
 │       │   ├── models/                     # ActiveRecord only
-│       │   ├── admin/infrastructure/       # adapters (repo/event bus)
+│       │   ├── admin/infrastructure/       # adapters (repo + event publishing)
 │       │   ├── workers/admin/infrastructure/
 │       │   ├── services/                   # optional orchestration
 │       │   └── presenters/
@@ -87,7 +92,7 @@ repo/
 │       │       │   │   ├── customer/repository.rb
 │       │       │   │   ├── events/publisher.rb
 │       │       │   │   ├── events/dead_letter_store.rb
-│       │       │   │   ├── event_bus.rb            # TODO: pendiente decidir facade/alias estable sobre Publisher
+│       │       │   │   ├── events/event_bus.rb     # facade estable sobre Publisher (implemented)
 │       │       │   │   ├── notifier.rb             # TODO: pendiente implementar puerto de notificaciones/integraciones
 │       │       │   │   └── logger.rb
 │       │       │   └── dto/
@@ -117,7 +122,9 @@ North-star naming:
 ```rb
 CustomerCore::Domain::Customer
 CustomerCore::Application::UseCases::Customer::Create
-CustomerCore::Application::Interfaces::Repositories::CustomerRepository
+CustomerCore::Application::Interfaces::Customer::Repository
+CustomerCore::Application::Interfaces::Events::EventBus
+CustomerCore::Application::Interfaces::Events::Publisher
 CustomerCore::Events::Customer::Created
 Admin::Infrastructure::Repositories::ActiveRecord::CustomerRepository
 Admin::Infrastructure::Events::FaktoryEventBus
@@ -266,11 +273,14 @@ This is the baseline contract for upcoming componentization work (ViewComponent 
 
 # ⚡ 📡 Event Publishing
 
+## Implemented today
+
 ```sh
 packages/customer_core/lib/customer_core/application/interfaces/
 ├── events/
 │   ├── publisher.rb
-│   └── dead_letter_store.rb
+│   ├── dead_letter_store.rb
+│   └── event_bus.rb
 └── logger.rb
 
 apps/admin/app/admin/infrastructure/
@@ -279,11 +289,14 @@ apps/admin/app/admin/infrastructure/
 │   └── rails_dead_letter_store.rb
 └── logging/
     └── rails_logger.rb
+```
 
-# TODO: componentes de plataforma aún pendientes (target architecture)
+## Target / pending
+
+```sh
 platform/events/
 ├── event.rb                              # TODO: pendiente contrato base de evento cross-context
-├── event_bus.rb                          # TODO: pendiente bus/facade de plataforma
+├── event_bus.rb                          # TODO: pendiente fachada de plataforma (encima de EventBus actual)
 ├── sync/
 │   └── in_memory_event_bus.rb            # TODO: pendiente implementación para desarrollo/tests integrados
 ├── async/
@@ -301,7 +314,9 @@ Use Case
   ↓
 Domain Event
   ↓
-Publisher
+EventBus facade
+  ↓
+Publisher adapter
   ↓
 Handlers
   ↓
@@ -335,7 +350,9 @@ platform/integrations/
 ```
 CustomerCreated
   ↓
-Publisher                                 # TODO: evaluar si exponer Event Bus como fachada explícita
+EventBus facade
+  ↓
+Publisher (FaktoryEventBus)
   ↓
 Forward to n8n
   ↓
