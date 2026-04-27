@@ -6,6 +6,12 @@ if defined?(Lookbook)
   end
 
   Rails.application.config.to_prepare do
-    ViewComponent::Preview.load_previews if defined?(ViewComponent::Preview)
+    if defined?(ViewComponent::Preview)
+      if ViewComponent::Preview.respond_to?(:load_previews)
+        ViewComponent::Preview.load_previews
+      elsif ViewComponent::Preview.respond_to?(:__vc_load_previews)
+        ViewComponent::Preview.__vc_load_previews
+      end
+    end
   end
 end
