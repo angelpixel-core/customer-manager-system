@@ -293,6 +293,11 @@ apps/admin/app/admin/infrastructure/
 │   └── rails_notifier.rb
 └── logging/
     └── rails_logger.rb
+
+apps/admin/lib/platform/events/
+├── event.rb
+├── event_bus.rb
+└── registry.rb
 ```
 
 ## Target / pending
@@ -300,11 +305,11 @@ apps/admin/app/admin/infrastructure/
 ```sh
 platform/events/
 ├── event.rb                              # TODO: pendiente contrato base de evento cross-context
-├── event_bus.rb                          # TODO: pendiente fachada de plataforma (encima de EventBus actual)
+├── event_bus.rb                          # TODO: pendiente mover/adaptar implementacion local de apps/admin/lib/platform/events
 ├── sync/
 │   └── in_memory_event_bus.rb            # TODO: pendiente implementación para desarrollo/tests integrados
 ├── async/
-│   ├── faktory_event_bus.rb              # TODO: pendiente unificar con adapter actual de admin
+│   ├── faktory_event_bus.rb              # TODO: pendiente mover/adaptar desde admin/infrastructure/events/faktory_event_bus.rb
 │   └── retry_handler.rb                  # TODO: pendiente política de retries centralizada
 ├── serializers/                          # TODO: pendiente serialización de integration events
 ├── registry/                             # TODO: pendiente registro/descubrimiento de handlers
