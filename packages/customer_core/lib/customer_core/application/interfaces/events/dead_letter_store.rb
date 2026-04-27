@@ -1,0 +1,20 @@
+# frozen_string_literal: true
+
+module CustomerCore
+  module Application
+    module Interfaces
+      module Events
+        # Contract for storing failed events (dead-letter).
+        class DeadLetterStore
+          # @param event [Object]
+          # @param error [StandardError]
+          # @param context [Hash]
+          # @return [void]
+          def record(event:, error:, context: {})
+            raise NotImplementedError
+          end
+        end
+      end
+    end
+  end
+end
