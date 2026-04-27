@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+
+VALID_TARGETS = %w[all core adapters platform_events integrations e2e].freeze
+APP_ROOT = File.expand_path("..", __dir__)
+
+target = ARGV.first || "all"
+
+unless VALID_TARGETS.include?(target)
+  warn "Unknown gate target: #{target}"
+  warn "Usage: bin/gates [#{VALID_TARGETS.join('|')}]"
+  exit 1
+end
+
+Dir.chdir(APP_ROOT) do
+  exec "./bin/rake", "quality:gates:#{target}"
+end
