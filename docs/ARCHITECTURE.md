@@ -302,6 +302,14 @@ apps/admin/lib/platform/events/
 ├── dead_letter_queue.rb
 └── metrics.rb
 
+apps/admin/lib/platform/integrations/
+├── serializers/
+│   ├── event_serializer.rb
+│   └── customer_created.rb
+└── n8n/
+    ├── client.rb
+    └── event_forwarder.rb
+
 apps/admin/app/models/platform/events/
 └── dead_letter_record.rb
 ```
@@ -320,6 +328,10 @@ platform/events/
 ├── serializers/                          # TODO: pendiente serialización de integration events
 ├── registry/                             # TODO: pendiente mover/adaptar desde apps/admin/lib/platform/events/registry.rb
 └── dead_letter_queue/                    # TODO: pendiente mover/adaptar desde apps/admin/lib/platform/events/dead_letter_queue.rb
+
+platform/integrations/
+├── serializers/                          # TODO: pendiente mover/adaptar desde apps/admin/lib/platform/integrations/serializers
+└── n8n/                                  # TODO: pendiente mover/adaptar desde apps/admin/lib/platform/integrations/n8n
 ```
 
 # 🧠 Flow
