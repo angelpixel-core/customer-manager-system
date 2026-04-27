@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "./_fonts/_index.css";
+@import "./_breakpoints.css";
+@import "./_colors.css";

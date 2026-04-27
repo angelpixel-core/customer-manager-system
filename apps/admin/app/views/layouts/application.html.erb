@@ -18,8 +18,7 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag :application, "data-turbo-track": "reload" %>
     <%= vite_client_tag %>
     <%= vite_javascript_tag 'application' %>
     <!--
@@ -34,7 +33,22 @@
 
   </head>
 
-  <body>
-    <%= yield %>
+  <body class="app-shell">
+    <header class="app-topbar">
+      <p class="app-brand">Customers Manager System</p>
+      <nav class="app-nav" aria-label="Primary">
+        <%= link_to "Home", "/", class: "nav-link" %>
+        <%= link_to "Login", "/login", class: "nav-link" %>
+        <%= link_to "Admin", "/admin", class: "nav-link" %>
+      </nav>
+    </header>
+
+    <main class="app-main">
+      <div class="app-container">
+        <section class="surface-card">
+          <%= yield %>
+        </section>
+      </div>
+    </main>
   </body>
 </html>

@@ -1,0 +1,6 @@
+@theme {
+  --color-dark: var(--color-dark);
+  --color-light: var(--color-light);
+  --color-primary: var(--color-primary);
+  --color-primary-dark: var(--color-primary-dark);
+}

@@ -1,0 +1,12 @@
+/* -------- TEXT TRUNCATION -------- */
+
+/**
+ * .text-ellipsis
+ * Trunca texto en una sola línea con '...'.
+ * Útil para tarjetas o listas donde el texto debe ser compacto.
+ */
+.text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

@@ -1,0 +1,14 @@
+/* Link defaults tuned to the current brand palette. */
+a {
+  color: var(--color-brand-strong);
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.15em;
+}
+
+a:hover {
+  color: var(--color-brand);
+}
+
+.link-muted {
+  color: var(--color-text-muted);
+}
