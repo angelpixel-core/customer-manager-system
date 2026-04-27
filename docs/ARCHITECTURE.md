@@ -87,6 +87,8 @@ repo/
 │       │       │   │   ├── customer/repository.rb
 │       │       │   │   ├── events/publisher.rb
 │       │       │   │   ├── events/dead_letter_store.rb
+│       │       │   │   ├── event_bus.rb            # TODO: pendiente decidir facade/alias estable sobre Publisher
+│       │       │   │   ├── notifier.rb             # TODO: pendiente implementar puerto de notificaciones/integraciones
 │       │       │   │   └── logger.rb
 │       │       │   └── dto/
 │       │       └── events/
@@ -277,6 +279,19 @@ apps/admin/app/admin/infrastructure/
 │   └── rails_dead_letter_store.rb
 └── logging/
     └── rails_logger.rb
+
+# TODO: componentes de plataforma aún pendientes (target architecture)
+platform/events/
+├── event.rb                              # TODO: pendiente contrato base de evento cross-context
+├── event_bus.rb                          # TODO: pendiente bus/facade de plataforma
+├── sync/
+│   └── in_memory_event_bus.rb            # TODO: pendiente implementación para desarrollo/tests integrados
+├── async/
+│   ├── faktory_event_bus.rb              # TODO: pendiente unificar con adapter actual de admin
+│   └── retry_handler.rb                  # TODO: pendiente política de retries centralizada
+├── serializers/                          # TODO: pendiente serialización de integration events
+├── registry/                             # TODO: pendiente registro/descubrimiento de handlers
+└── dead_letter_queue/                    # TODO: pendiente estrategia persistente de DLQ
 ```
 
 # 🧠 Flow
@@ -320,7 +335,7 @@ platform/integrations/
 ```
 CustomerCreated
   ↓
-Event Bus
+Publisher                                 # TODO: evaluar si exponer Event Bus como fachada explícita
   ↓
 Forward to n8n
   ↓
