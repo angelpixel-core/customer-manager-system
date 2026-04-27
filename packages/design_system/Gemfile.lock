@@ -3,7 +3,7 @@ PATH
   specs:
     design_system (0.1.0)
       rails (>= 8.1)
-      view_component (>= 3.24)
+      view_component (~> 4.8)
 
 GEM
   remote: https://rubygems.org/

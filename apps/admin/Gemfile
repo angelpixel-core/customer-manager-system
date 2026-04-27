@@ -70,7 +70,7 @@ gem "cucumber-rails", "~> 3.1", require: false, group: :test
 gem "database_cleaner-active_record", "~> 2.2", group: :test
 
 gem "activeadmin", "~> 3.5"
-gem "view_component", "~> 3.22"
+gem "view_component", "~> 4.8"
 
 # Quality and Security
 

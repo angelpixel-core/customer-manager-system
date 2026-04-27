@@ -16,7 +16,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "rails", ">= 8.1"
-  spec.add_dependency "view_component", ">= 3.24"
+  spec.add_dependency "view_component", "~> 4.8"
 
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "yard", "~> 0.9.37"
