@@ -20,7 +20,7 @@ RSpec.describe "CreateCustomer", type: :request do
     expect(CustomerCore::Application::UseCases::Customer::Create).to receive(:call).with(
       hash_including(
         repo: an_instance_of(Admin::Infrastructure::Repositories::ActiveRecord::CustomerRepository),
-        publisher: an_instance_of(Admin::Infrastructure::Events::FaktoryEventBus),
+        publisher: an_instance_of(CustomerCore::Application::Interfaces::Events::EventBus),
         logger: an_instance_of(Admin::Infrastructure::Logging::RailsLogger),
         dead_letter_store: an_instance_of(Admin::Infrastructure::Events::RailsDeadLetterStore),
         input: {name: "Angel", email: "test@mail.com"}
