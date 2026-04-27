@@ -15,4 +15,23 @@ RSpec.describe "CreateCustomer", type: :request do
 
     expect(response).to have_http_status(:redirect)
   end
+
+  it "wires publisher, logger and dead letter adapters into the use case" do
+    expect(CustomerCore::Application::UseCases::Customer::Create).to receive(:call).with(
+      hash_including(
+        repo: an_instance_of(Admin::Infrastructure::Repositories::ActiveRecord::CustomerRepository),
+        publisher: an_instance_of(Admin::Infrastructure::Events::FaktoryEventBus),
+        logger: an_instance_of(Admin::Infrastructure::Logging::RailsLogger),
+        dead_letter_store: an_instance_of(Admin::Infrastructure::Events::RailsDeadLetterStore),
+        input: {name: "Angel", email: "test@mail.com"}
+      )
+    )
+
+    post "/admin/customers", params: {
+      name: "Angel",
+      email: "test@mail.com"
+    }
+
+    expect(response).to have_http_status(:redirect)
+  end
 end
