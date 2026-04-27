@@ -14,6 +14,7 @@ class CustomersController < ApplicationController
         publisher: Admin::Infrastructure::Events::FaktoryEventBus.new
       ),
       logger: Admin::Infrastructure::Logging::RailsLogger.new,
+      notifier: Admin::Infrastructure::Notifications::RailsNotifier.new,
       dead_letter_store: Admin::Infrastructure::Events::RailsDeadLetterStore.new,
       input: customer_params
     )
