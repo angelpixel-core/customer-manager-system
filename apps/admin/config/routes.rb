@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  if Rails.env.development? && defined?(Lookbook::Engine)
+    mount Lookbook::Engine, at: "/lookbook"
+  end
+
   ActiveAdmin.routes(self)
   get "/admin/customers", to: "customers#index", as: :admin_customers
   post "/admin/customers", to: "customers#create"
