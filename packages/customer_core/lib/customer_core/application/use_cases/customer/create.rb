@@ -7,34 +7,29 @@ module CustomerCore
           # Class-level convenience entrypoint for callable usage.
           #
           # @param repo [CustomerCore::Application::Interfaces::Customer::Repository]
-          # @param publisher [CustomerCore::Application::Interfaces::Events::Publisher, nil]
-          # @param event_bus [CustomerCore::Application::Interfaces::Events::Publisher, nil]
+          # @param publisher [CustomerCore::Application::Interfaces::Events::Publisher]
           # @param logger [CustomerCore::Application::Interfaces::Logger, nil]
           # @param dead_letter_store [CustomerCore::Application::Interfaces::Events::DeadLetterStore, nil]
           # @param input [Hash]
           # @return [CustomerCore::Domain::Customer]
-          def self.call(repo:, input:, publisher: nil, event_bus: nil, logger: nil, dead_letter_store: nil)
+          def self.call(repo:, input:, publisher:, logger: nil, dead_letter_store: nil)
             new(
               repo: repo,
               publisher: publisher,
-              event_bus: event_bus,
               logger: logger,
               dead_letter_store: dead_letter_store
             ).call(input)
           end
 
           # @param repo [CustomerCore::Application::Interfaces::Customer::Repository]
-          # @param publisher [CustomerCore::Application::Interfaces::Events::Publisher, nil]
-          # @param event_bus [CustomerCore::Application::Interfaces::Events::Publisher, nil]
+          # @param publisher [CustomerCore::Application::Interfaces::Events::Publisher]
           # @param logger [CustomerCore::Application::Interfaces::Logger, nil]
           # @param dead_letter_store [CustomerCore::Application::Interfaces::Events::DeadLetterStore, nil]
-          def initialize(repo:, publisher: nil, event_bus: nil, logger: nil, dead_letter_store: nil)
+          def initialize(repo:, publisher:, logger: nil, dead_letter_store: nil)
             @repo = repo
-            @publisher = publisher || event_bus
+            @publisher = publisher
             @logger = logger
             @dead_letter_store = dead_letter_store
-
-            raise ArgumentError, "publisher required" unless @publisher
           end
 
           # @param input [Hash]

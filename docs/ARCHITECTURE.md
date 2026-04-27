@@ -84,9 +84,9 @@ repo/
 │       │       │   ├── commands/
 │       │       │   ├── queries/
 │       │       │   ├── interfaces/
-│       │       │   │   ├── repositories/
-│       │       │   │   ├── event_bus.rb
-│       │       │   │   ├── notifier.rb
+│       │       │   │   ├── customer/repository.rb
+│       │       │   │   ├── events/publisher.rb
+│       │       │   │   ├── events/dead_letter_store.rb
 │       │       │   │   └── logger.rb
 │       │       │   └── dto/
 │       │       └── events/
@@ -194,7 +194,9 @@ apps/admin/
 │   ├── admin/
 │   │   └── infrastructure/
 │   │       ├── repositories/active_record/customer_repository.rb
-│   │       └── events/faktory_event_bus.rb
+│   │       ├── events/faktory_event_bus.rb
+│   │       ├── events/rails_dead_letter_store.rb
+│   │       └── logging/rails_logger.rb
 │   └── workers/
 │       └── admin/infrastructure/send_welcome_email_worker.rb
 │
@@ -260,22 +262,21 @@ apps/admin/app/frontend/
 
 This is the baseline contract for upcoming componentization work (ViewComponent + Lookbook).
 
-# ⚡ 📡 Event System (SYNC + ASYNC)
+# ⚡ 📡 Event Publishing
 
 ```sh
-platform/events/
-├── event.rb
-├── event_bus.rb
-├── sync/
-│   └── in_memory_event_bus.rb
-│
-├── async/
+packages/customer_core/lib/customer_core/application/interfaces/
+├── events/
+│   ├── publisher.rb
+│   └── dead_letter_store.rb
+└── logger.rb
+
+apps/admin/app/admin/infrastructure/
+├── events/
 │   ├── faktory_event_bus.rb
-│   └── retry_handler.rb
-│
-├── serializers/
-├── registry/
-└── dead_letter_queue/
+│   └── rails_dead_letter_store.rb
+└── logging/
+    └── rails_logger.rb
 ```
 
 # 🧠 Flow
@@ -285,7 +286,7 @@ Use Case
   ↓
 Domain Event
   ↓
-Event Bus
+Publisher
   ↓
 Handlers
   ↓
