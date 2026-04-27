@@ -35,12 +35,11 @@ ActiveAdmin.register Customer::Record do
   controller do
     # @return [void]
     def create
-      use_case = CustomerCore::Application::UseCases::Customer::Create.new(
+      CustomerCore::Application::UseCases::Customer::Create.call(
         repo: Admin::Infrastructure::Repositories::ActiveRecord::CustomerRepository.new,
-        event_bus: Admin::Infrastructure::Events::FaktoryEventBus.new
+        event_bus: Admin::Infrastructure::Events::FaktoryEventBus.new,
+        input: customer_params
       )
-
-      use_case.call(customer_params)
 
       redirect_to admin_customer_records_path, notice: "Customer created"
     rescue ArgumentError, ActiveRecord::RecordInvalid => e

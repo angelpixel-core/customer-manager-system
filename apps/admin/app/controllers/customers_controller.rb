@@ -8,12 +8,11 @@ class CustomersController < ApplicationController
 
   # @return [void]
   def create
-    use_case = CustomerCore::Application::UseCases::Customer::Create.new(
+    CustomerCore::Application::UseCases::Customer::Create.call(
       repo: Admin::Infrastructure::Repositories::ActiveRecord::CustomerRepository.new,
-      event_bus: Admin::Infrastructure::Events::FaktoryEventBus.new
+      event_bus: Admin::Infrastructure::Events::FaktoryEventBus.new,
+      input: customer_params
     )
-
-    use_case.call(customer_params)
 
     redirect_to admin_customers_path
   end
