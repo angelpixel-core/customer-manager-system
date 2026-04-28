@@ -28,3 +28,16 @@ Examples:
 
 - No domain logic in components.
 - Delivery layer composes components and passes plain data.
+
+## Component Definition of Done
+
+- A real usage exists in at least one screen.
+- Accessibility baseline is verified (focus states, labels, ARIA where applicable).
+- Variants and states are explicit in API and styles.
+- A Lookbook preview exists for normal and edge states.
+- Component-level specs exist and pass in CI.
+- Public API and usage examples are documented in `docs/components.md`.
+
+## Promotion Rule
+
+- If a UI pattern is needed in 2+ places, it is a candidate for Design System extraction.
