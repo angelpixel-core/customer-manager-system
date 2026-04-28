@@ -80,6 +80,20 @@ jobs:
           bundler-cache: true
           working-directory: apps/admin
 
+      - name: Set up Ruby (core)
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "4.0.3"
+          bundler-cache: true
+          working-directory: packages/customer_core
+
+      - name: Set up Ruby (core)
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "4.0.3"
+          bundler-cache: true
+          working-directory: packages/customer_core
+
       - name: Set up Node
         uses: actions/setup-node@v4
         with:

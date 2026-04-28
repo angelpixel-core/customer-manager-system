@@ -15,19 +15,19 @@ namespace :yard do
 
       run_step!(
         "customer_core YARD stats",
-        "bundle exec yard stats --list-undoc > #{report_dir.join('customer_core.txt')}",
+        "bundle exec yard stats --list-undoc > #{report_dir.join("customer_core.txt")}",
         chdir: Rails.root.join("..", "..", "packages", "customer_core")
       )
 
       run_step!(
         "design_system YARD stats",
-        "bundle exec yard stats --list-undoc > #{report_dir.join('design_system.txt')}",
+        "bundle exec yard stats --list-undoc > #{report_dir.join("design_system.txt")}",
         chdir: Rails.root.join("..", "..", "packages", "design_system")
       )
 
       run_step!(
         "admin YARD stats",
-        "bundle exec yard stats --list-undoc > #{report_dir.join('admin.txt')}",
+        "bundle exec yard stats --list-undoc > #{report_dir.join("admin.txt")}",
         chdir: Rails.root
       )
 
