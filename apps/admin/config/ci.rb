@@ -5,7 +5,7 @@ CI.run do
 
   step "Quality: Layered gates", "bin/gates"
 
-  step "Style: Ruby", "bin/rubocop"
+  step "Style: Ruby", "bundle exec standardrb"
 
   step "Security: Gem audit", "bin/bundler-audit"
   step "Security: Yarn vulnerability audit", "yarn audit"

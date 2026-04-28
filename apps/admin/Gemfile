@@ -74,7 +74,7 @@ gem "view_component", "~> 4.8"
 
 # Quality and Security
 
-gem "standard", "~> 1.35", group: :development
+gem "standard", ">= 1.35.1", group: :development
 
 gem "rubycritic", "~> 5.0", group: :development
 
