@@ -26,7 +26,7 @@ module DesignSystem
         end
 
         def normalize_align
-          value = @align.to_sym
+          value = (@align || :left).to_sym
           return value if %i[left center right].include?(value)
 
           :left

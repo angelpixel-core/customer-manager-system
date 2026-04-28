@@ -29,7 +29,7 @@ module DesignSystem
             render DesignSystem::UI::Components::TableRowComponent.new do
               helpers.safe_join(
                 @columns.map do |column|
-                  render DesignSystem::UI::Components::TableCellComponent.new(header: true, align: column[:align]) do
+                  render DesignSystem::UI::Components::TableCellComponent.new(header: true, align: column.fetch(:align, :left)) do
                     column.fetch(:label)
                   end
                 end
@@ -48,7 +48,7 @@ module DesignSystem
           render DesignSystem::UI::Components::TableRowComponent.new do
             helpers.safe_join(
               @columns.map do |column|
-                render DesignSystem::UI::Components::TableCellComponent.new(align: column[:align]) do
+                render DesignSystem::UI::Components::TableCellComponent.new(align: column.fetch(:align, :left)) do
                   resolve_cell(row, column)
                 end
               end

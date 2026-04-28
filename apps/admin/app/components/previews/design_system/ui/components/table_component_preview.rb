@@ -10,7 +10,7 @@ module DesignSystem
 
           render DesignSystem::UI::Components::TableComponent.new(columns: columns, rows: rows) do |row, column|
             if column[:key] == :actions
-              helpers.link_to("View", "/admin/customer_records/#{row[:id]}", class: "ds-button ds-button--link ds-button--sm")
+              view_context.link_to("View", "/admin/customer_records/#{row[:id]}", class: "ds-button ds-button--link ds-button--sm")
             else
               row[column[:key]]
             end
