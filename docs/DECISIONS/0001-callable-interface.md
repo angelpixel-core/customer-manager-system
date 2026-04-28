@@ -14,7 +14,7 @@ and enables passing classes/instances as callable dependencies.
 
 Standardize `#call` for action objects and keep explicit method names elsewhere.
 
-- Use `#call` in use cases and orchestration services.
+- Use `#call` in use cases and optional orchestration services (when explicitly introduced).
 - Provide optional class-level convenience API: `.call(...)`.
 - Keep explicit semantic methods in repositories/events/workers/models.
 

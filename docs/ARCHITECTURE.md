@@ -56,7 +56,7 @@ repo/
 │       │   ├── models/                     # ActiveRecord only
 │       │   ├── admin/infrastructure/       # adapters (repo + event publishing)
 │       │   ├── workers/admin/infrastructure/
-│       │   ├── services/                   # optional orchestration
+│       │   ├── services/                   # optional orchestration (target/pending; not implemented today)
 │       │   └── presenters/
 │       ├── config/
 │       │   ├── initializers/
@@ -79,7 +79,7 @@ repo/
 │       │       │   ├── customer.rb
 │       │       │   ├── value_objects/
 │       │       │   ├── policies/
-│       │       │   └── services/
+│       │       │   └── services/           # optional domain services (target/pending)
 │       │       ├── application/            # use cases + ports
 │       │       │   ├── use_cases/
 │       │       │   │   └── customer/
@@ -173,7 +173,7 @@ Use `#call` as the standard interface for action objects.
 Apply to:
 
 - `packages/customer_core/.../application/use_cases/**`
-- delivery-layer orchestration services (if introduced)
+- delivery-layer orchestration services (if explicitly introduced; not synonym of use case)
 
 Do not force `#call` in:
 
