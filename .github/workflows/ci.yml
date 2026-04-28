@@ -49,11 +49,26 @@ jobs:
     name: Admin quality and security
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/customers_manager_system_test
+    services:
+      postgres:
+        image: postgres:16
+        ports:
+          - "5432:5432"
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: customers_manager_system_test
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     defaults:
       run:
         working-directory: apps/admin
-    env:
-      RUBOCOP_CACHE_ROOT: tmp/rubocop
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -65,24 +80,15 @@ jobs:
           bundler-cache: true
           working-directory: apps/admin
 
-      - name: Prepare RuboCop cache
-        uses: actions/cache@v4
-        env:
-          DEPENDENCIES_HASH: ${{ hashFiles('apps/admin/.ruby-version', 'apps/admin/**/.rubocop.yml', 'apps/admin/**/.rubocop_todo.yml', 'apps/admin/Gemfile.lock') }}
+      - name: Set up Node
+        uses: actions/setup-node@v4
         with:
-          path: apps/admin/${{ env.RUBOCOP_CACHE_ROOT }}
-          key: rubocop-${{ runner.os }}-${{ env.DEPENDENCIES_HASH }}-${{ github.ref_name == github.event.repository.default_branch && github.run_id || 'default' }}
-          restore-keys: |
-            rubocop-${{ runner.os }}-${{ env.DEPENDENCIES_HASH }}-
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/admin/package-lock.json
 
-      - name: Lint with RuboCop
-        run: bin/rubocop -f github
-
-      - name: Scan for Rails security issues
-        run: bin/brakeman --no-pager
-
-      - name: Scan gem vulnerabilities
-        run: bin/bundler-audit
+      - name: Run admin CI pipeline
+        run: bin/ci
 
   admin-gates:
     name: Admin layered gates
