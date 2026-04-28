@@ -23,27 +23,37 @@ module Platform
         # @param platform_event [Platform::Events::Event]
         # @return [CustomerCore::Application::Result]
         def call(platform_event)
+          event_name = platform_event.name
           payload = @serializer.serialize(platform_event)
-          return CustomerCore::Application::Result.success unless payload
+          return result_success unless payload
 
           if @webhook_url.to_s.strip.empty?
             @logger.info("N8n forwarder skipped: webhook URL not configured")
-            return CustomerCore::Application::Result.success(metadata: {skipped: true})
+            return result_success(metadata: {skipped: true})
           end
 
           response = @client.post_json(url: @webhook_url, payload: payload)
-          return CustomerCore::Application::Result.success if response.is_a?(Net::HTTPSuccess)
+          return result_success if response.is_a?(Net::HTTPSuccess)
 
           message = "n8n forward failed: HTTP #{response.code}"
-          @logger.error("N8n forwarder failed for #{platform_event.name}: #{message}")
+          @logger.error("N8n forwarder failed for #{event_name}: #{message}")
 
           CustomerCore::Application::Result.failure(
             code: :n8n_http_error,
             message: message
           )
         rescue => e
-          @logger.error("N8n forwarder failed for #{platform_event.name}: #{e.class} - #{e.message}")
-          CustomerCore::Application::Result.failure(code: :n8n_forward_failed, message: e.message, cause: e)
+          error_message = e.message
+          @logger.error("N8n forwarder failed for #{event_name}: #{e.class} - #{error_message}")
+          CustomerCore::Application::Result.failure(code: :n8n_forward_failed, message: error_message, cause: e)
+        end
+
+        private
+
+        def result_success(metadata: {})
+          return CustomerCore::Application::Result.success if metadata.empty?
+
+          CustomerCore::Application::Result.success(metadata: metadata)
         end
       end
     end

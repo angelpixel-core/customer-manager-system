@@ -37,12 +37,16 @@ module Admin
         # @param platform_event [Platform::Events::Event]
         # @return [CustomerCore::Application::Result]
         def handle_customer_created(platform_event)
-          return CustomerCore::Application::Result.success if Rails.env.test?
+          return success_result if Rails.env.test?
 
           Admin::Infrastructure::SendWelcomeEmailWorker.perform_async(platform_event.raw_event.customer.email)
-          CustomerCore::Application::Result.success
+          success_result
         rescue => e
           CustomerCore::Application::Result.failure(code: :enqueue_failed, message: e.message, cause: e)
+        end
+
+        def success_result
+          CustomerCore::Application::Result.success
         end
       end
     end

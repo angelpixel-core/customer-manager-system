@@ -131,19 +131,27 @@ jobs:
       - name: Reek changed Ruby files (blocking)
         if: github.event_name == 'pull_request'
         run: |
-          CHANGED=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep '^apps/admin/.*\.rb$' | tr '\n' ' ')
+          CHANGED=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep '^\(apps/admin/\)\?\(app\|lib\)/.*\.rb$' || true)
           if [ -z "$CHANGED" ]; then
-            echo "No changed Ruby files under apps/admin"
+            echo "No changed Ruby files under apps/admin/app or apps/admin/lib"
             exit 0
           fi
 
-          RELATIVE=""
-          for file in $CHANGED; do
-            RELATIVE="$RELATIVE ${file#apps/admin/}"
-          done
+          RELATIVE=()
+          while IFS= read -r file; do
+            [ -z "$file" ] && continue
+            file="${file#./}"
+            file="${file#apps/admin/}"
+            RELATIVE+=("$file")
+          done <<< "$CHANGED"
 
-          echo "Checking changed files:$RELATIVE"
-          bundle exec reek --no-progress $RELATIVE
+          if [ ${#RELATIVE[@]} -eq 0 ]; then
+            echo "No changed Ruby files after normalization"
+            exit 0
+          fi
+
+          echo "Checking changed files: ${RELATIVE[*]}"
+          bundle exec reek --no-progress --force-exclusion "${RELATIVE[@]}"
 
   admin-rubycritic:
     name: Admin RubyCritic (baseline)

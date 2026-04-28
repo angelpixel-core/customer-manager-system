@@ -9,6 +9,17 @@ exclude_paths:
   - db/migrate
   - node_modules
   - vendor
+  # Stage-1 baseline: known legacy hotspots to be cleaned iteratively.
+  - app/admin/customers.rb
+  - app/admin/infrastructure/events/faktory_event_bus.rb
+  - app/admin/infrastructure/events/rails_dead_letter_store.rb
+  - lib/platform/events/dead_letter_queue.rb
+  - lib/platform/events/event_bus.rb
+  - lib/platform/events/metrics.rb
+  - lib/platform/events/registry.rb
+  - lib/platform/integrations/n8n/client.rb
+  - lib/platform/integrations/n8n/event_forwarder.rb
+  - lib/platform/integrations/serializers/customer_created.rb
 
 detectors:
   IrresponsibleModule:

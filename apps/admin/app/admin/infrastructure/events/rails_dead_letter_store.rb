@@ -16,16 +16,19 @@ module Admin
         # @param context [Hash]
         # @return [CustomerCore::Application::Result]
         def record(event:, error:, context: {})
+          event_name = event.class.name
+          error_name = error.class.name
+
           @dead_letter_queue.push(event: event, error: error, metadata: {source: "rails_dead_letter_store"})
 
           @metrics.dead_letter_recorded(
-            event_name: event.class.name,
+            event_name: event_name,
             handler: self.class.name,
-            error_class: error.class.name
+            error_class: error_name
           )
 
           Rails.logger.error(
-            "Dead letter persisted event=#{event.class} error=#{error.class}: #{error.message} context=#{context.inspect}"
+            "Dead letter persisted event=#{event_name} error=#{error_name}: #{error.message} context=#{context.inspect}"
           )
 
           CustomerCore::Application::Result.success
