@@ -53,8 +53,26 @@ namespace :quality do
       )
     end
 
+    desc "Run Bullet diagnostics for customer create/list flow (warn-only)"
+    task :bullet_warn do
+      run_step!(
+        "Bullet warn-only",
+        "BULLET_DIAGNOSTIC=1 bundle exec rspec spec/requests/customer/create_spec.rb spec/system/admin_customer_form_spec.rb",
+        chdir: Rails.root
+      )
+    end
+
+    desc "Run Bullet diagnostics for customer create/list flow (blocking)"
+    task :bullet_enforced do
+      run_step!(
+        "Bullet enforced",
+        "BULLET_DIAGNOSTIC=1 BULLET_STRICT=1 bundle exec rspec spec/requests/customer/create_spec.rb spec/system/admin_customer_form_spec.rb",
+        chdir: Rails.root
+      )
+    end
+
     desc "Run all layered testing gates"
-    task all: [:core, :adapters, :platform_events, :integrations, :e2e]
+    task all: [:core, :adapters, :platform_events, :integrations, :e2e, :bullet_enforced]
   end
 
   desc "Run layered testing gates"

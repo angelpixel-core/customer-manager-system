@@ -6,7 +6,7 @@ return unless defined?(Bullet)
 
 Bullet.enable = true
 Bullet.bullet_logger = true
-Bullet.raise = false
+Bullet.raise = ENV["BULLET_STRICT"] == "1"
 Bullet.n_plus_one_query_enable = true
 Bullet.unused_eager_loading_enable = true
 Bullet.counter_cache_enable = true

@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-VALID_TARGETS = %w[all core adapters platform_events integrations e2e].freeze
+VALID_TARGETS = %w[all core adapters platform_events integrations e2e bullet_warn bullet_enforced].freeze
 APP_ROOT = File.expand_path("..", __dir__)
 
 target = ARGV.first || "all"
