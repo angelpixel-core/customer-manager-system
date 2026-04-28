@@ -149,6 +149,12 @@ bundle exec rspec
 
 ## 7) Troubleshooting
 
+## 8) PR checklist (docs)
+
+- If a PR changes public APIs in `customer_core`, `design_system`, or scoped
+  admin entrypoints, update YARD docs in the same PR.
+- Follow `docs/YARD_CONVENTIONS.md` (`@param` + `@return` minimum contract).
+
 ### Error: `The asset 'active_admin.css' was not found in the load path`
 
 Este error no bloquea validar el flujo E2E de negocio (request + use case + DB + worker).
