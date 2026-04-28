@@ -219,3 +219,93 @@ jobs:
       - name: Run layered gate checks
         run: bin/gates
         working-directory: apps/admin
+
+  core-yard:
+    name: Core YARD (non-blocking)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    continue-on-error: true
+    defaults:
+      run:
+        working-directory: packages/customer_core
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "4.0.3"
+          bundler-cache: true
+          working-directory: packages/customer_core
+
+      - name: Build YARD docs
+        run: bundle exec yard doc --no-progress --quiet
+
+      - name: Upload core YARD artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: yard-core-docs
+          path: packages/customer_core/docs/yard
+          if-no-files-found: error
+
+  design-system-yard:
+    name: Design system YARD (non-blocking)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    continue-on-error: true
+    defaults:
+      run:
+        working-directory: packages/design_system
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "4.0.3"
+          bundler-cache: true
+          working-directory: packages/design_system
+
+      - name: Build YARD docs
+        run: bundle exec yard doc --no-progress --quiet
+
+      - name: Upload design system YARD artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: yard-design-system-docs
+          path: packages/design_system/docs/yard
+          if-no-files-found: error
+
+  admin-yard:
+    name: Admin YARD (non-blocking)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    continue-on-error: true
+    defaults:
+      run:
+        working-directory: apps/admin
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "4.0.3"
+          bundler-cache: true
+          working-directory: apps/admin
+
+      - name: Build YARD docs
+        run: bundle exec yard doc --no-progress --quiet
+
+      - name: Upload admin YARD artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: yard-admin-docs
+          path: apps/admin/docs/yard
+          if-no-files-found: error
