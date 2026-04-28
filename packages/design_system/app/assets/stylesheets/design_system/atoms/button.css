@@ -13,9 +13,28 @@
   cursor: pointer;
 }
 
+.ds-button--sm {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.ds-button--md {
+  padding: 0.65rem 1rem;
+}
+
+.ds-button--lg {
+  padding: 0.8rem 1.2rem;
+  font-size: 1rem;
+}
+
 .ds-button:hover {
   border-color: var(--ds-color-brand);
   background: var(--ds-color-brand-soft);
+}
+
+.ds-button:focus-visible {
+  outline: 2px solid var(--ds-focus-ring);
+  outline-offset: 2px;
 }
 
 .ds-button--primary {
@@ -27,4 +46,49 @@
 .ds-button--primary:hover {
   border-color: var(--ds-color-brand-strong);
   background: var(--ds-color-brand-strong);
+}
+
+.ds-button--secondary {
+  background: var(--ds-color-surface);
+  color: var(--ds-color-text);
+}
+
+.ds-button--ghost {
+  background: transparent;
+  border-color: transparent;
+}
+
+.ds-button--ghost:hover {
+  border-color: var(--ds-color-border);
+}
+
+.ds-button--link {
+  background: transparent;
+  border-color: transparent;
+  color: var(--ds-color-brand);
+  text-decoration: underline;
+  padding-inline: 0;
+}
+
+.ds-button--link:hover {
+  color: var(--ds-color-brand-strong);
+  background: transparent;
+  border-color: transparent;
+}
+
+.ds-button--danger {
+  border-color: var(--ds-color-danger);
+  background: var(--ds-color-danger);
+  color: #ffffff;
+}
+
+.ds-button--danger:hover {
+  filter: brightness(0.95);
+}
+
+.ds-button.is-disabled,
+.ds-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
 }

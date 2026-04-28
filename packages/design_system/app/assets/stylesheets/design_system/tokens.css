@@ -18,4 +18,8 @@
   --ds-color-brand: #16697a;
   --ds-color-brand-strong: #0f4e5a;
   --ds-color-brand-soft: #d8ecf1;
+  --ds-color-danger: #b93c3c;
+  --ds-color-danger-soft: #fdecec;
+  --ds-color-success: #2a8f69;
+  --ds-focus-ring: color-mix(in srgb, var(--ds-color-brand) 30%, transparent);
 }
