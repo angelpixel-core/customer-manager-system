@@ -4,7 +4,11 @@ module CustomerCore
   module Application
     module Interfaces
       module Customer
+        # Global port convention: interfaces return Application::Result
+        # and avoid raising for expected adapter failures.
         class Repository
+          # @param customer [CustomerCore::Domain::Customer]
+          # @return [CustomerCore::Application::Result]
           def create(customer)
             raise NotImplementedError
           end
@@ -13,4 +17,3 @@ module CustomerCore
     end
   end
 end
-

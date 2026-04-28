@@ -6,8 +6,10 @@ RSpec.describe CustomerCore::Application::Interfaces::Events::EventBus do
       CustomerCore::Domain::Customer.new(name: "Angel", email: "test@mail.com")
     )
 
-    expect(publisher).to receive(:publish).with(event)
+    expect(publisher).to receive(:publish).with(event).and_return(CustomerCore::Application::Result.success)
 
-    described_class.new(publisher: publisher).publish(event)
+    result = described_class.new(publisher: publisher).publish(event)
+
+    expect(result).to be_success
   end
 end

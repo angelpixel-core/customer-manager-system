@@ -15,7 +15,7 @@ module CustomerCore
           end
 
           # @param event [Object]
-          # @return [void]
+          # @return [CustomerCore::Application::Result]
           def publish(event)
             @publisher.publish(event)
           end
