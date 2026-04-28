@@ -41,7 +41,7 @@ module Platform
             code: :n8n_http_error,
             message: message
           )
-        rescue StandardError => e
+        rescue => e
           @logger.error("N8n forwarder failed for #{platform_event.name}: #{e.class} - #{e.message}")
           CustomerCore::Application::Result.failure(code: :n8n_forward_failed, message: e.message, cause: e)
         end

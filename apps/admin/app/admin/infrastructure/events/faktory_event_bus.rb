@@ -41,7 +41,7 @@ module Admin
 
           Admin::Infrastructure::SendWelcomeEmailWorker.perform_async(platform_event.raw_event.customer.email)
           CustomerCore::Application::Result.success
-        rescue StandardError => e
+        rescue => e
           CustomerCore::Application::Result.failure(code: :enqueue_failed, message: e.message, cause: e)
         end
       end

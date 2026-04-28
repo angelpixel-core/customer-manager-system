@@ -29,7 +29,7 @@ module Admin
           )
 
           CustomerCore::Application::Result.success
-        rescue StandardError => e
+        rescue => e
           CustomerCore::Application::Result.failure(code: :dead_letter_persist_failed, message: e.message, cause: e)
         end
       end

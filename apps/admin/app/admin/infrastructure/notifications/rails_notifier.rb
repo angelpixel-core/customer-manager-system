@@ -10,7 +10,7 @@ module Admin
         def notify(event:, context: {})
           Rails.logger.info("Notifier event=#{event.class} context=#{context.inspect}")
           CustomerCore::Application::Result.success
-        rescue StandardError => e
+        rescue => e
           CustomerCore::Application::Result.failure(code: :notify_failed, message: e.message, cause: e)
         end
       end

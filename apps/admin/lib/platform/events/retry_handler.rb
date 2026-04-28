@@ -30,8 +30,8 @@ module Platform
 
         begin
           attempt += 1
-          return yield(attempt)
-        rescue StandardError => e
+          yield(attempt)
+        rescue => e
           if attempt < @max_attempts
             on_retry&.call(error: e, attempt: attempt, max_attempts: @max_attempts)
             sleep(@base_delay_seconds) if @base_delay_seconds.positive?
