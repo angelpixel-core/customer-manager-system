@@ -38,7 +38,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: "3.2"
+          ruby-version: "4.0.3"
           bundler-cache: true
           working-directory: packages/customer_core
 
@@ -76,7 +76,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: "3.2"
+          ruby-version: "4.0.3"
           bundler-cache: true
           working-directory: apps/admin
 
@@ -119,14 +119,14 @@ jobs:
       - name: Set up Ruby (admin)
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: "3.2"
+          ruby-version: "4.0.3"
           bundler-cache: true
           working-directory: apps/admin
 
       - name: Set up Ruby (core)
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: "3.2"
+          ruby-version: "4.0.3"
           bundler-cache: true
           working-directory: packages/customer_core
 
