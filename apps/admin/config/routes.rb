@@ -4,8 +4,6 @@ Rails.application.routes.draw do
   end
 
   ActiveAdmin.routes(self)
-  get "/admin/customers", to: "customers#index", as: :admin_customers
-  post "/admin/customers", to: "customers#create"
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

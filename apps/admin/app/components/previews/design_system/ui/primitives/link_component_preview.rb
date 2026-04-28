@@ -5,7 +5,7 @@ module DesignSystem
         def default
           render DesignSystem::UI::Primitives::LinkComponent.new(
             label: "Open customer",
-            href: "/admin/customer_records",
+            href: "/admin/customers",
             variant: :default,
             size: :md
           )
@@ -14,7 +14,7 @@ module DesignSystem
         def subtle
           render DesignSystem::UI::Primitives::LinkComponent.new(
             label: "Back to list",
-            href: "/admin/customer_records",
+            href: "/admin/customers",
             variant: :subtle,
             size: :sm
           )

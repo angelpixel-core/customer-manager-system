@@ -6,7 +6,7 @@ module DesignSystem
           render DesignSystem::UI::Atoms::ButtonComponent.new(
             label: "Create Customer",
             variant: :primary,
-            href: "/admin/customer_records/new"
+            href: "/admin/customers/new"
           )
         end
 

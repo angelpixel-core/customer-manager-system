@@ -1,5 +1,5 @@
 # ActiveAdmin resource for customer management backed by application use case.
-ActiveAdmin.register Customer::Record do
+ActiveAdmin.register Customer::Record, as: "Customer" do
   menu label: "Customers", priority: 2
 
   actions :index, :show, :new, :create
@@ -28,7 +28,7 @@ ActiveAdmin.register Customer::Record do
     div class: "ds-panel" do
       render DesignSystem::UI::Components::TableComponent.new(columns: columns, rows: rows, empty_state: "No customers yet") { |row, column|
         if column[:key] == :actions
-          helpers.link_to("View", helpers.admin_customer_record_path(row[:actions]), class: "ds-button ds-button--link ds-button--sm")
+          helpers.link_to("View", helpers.admin_customer_path(row[:actions]), class: "ds-button ds-button--link ds-button--sm")
         else
           row[column[:key]]
         end
@@ -69,13 +69,11 @@ ActiveAdmin.register Customer::Record do
       )
 
       unless result.success?
-        flash.now[:error] = result.message
-        @customer_record = Customer::Record.new(customer_params)
-        render :new, status: :unprocessable_entity
+        redirect_to admin_customers_path, alert: result.message
         return
       end
 
-      redirect_to admin_customer_records_path, notice: "Customer created"
+      redirect_to admin_customers_path, notice: "Customer created"
     end
 
     private

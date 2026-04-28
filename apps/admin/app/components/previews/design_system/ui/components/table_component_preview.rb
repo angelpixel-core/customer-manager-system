@@ -12,7 +12,7 @@ module DesignSystem
             if column[:key] == :actions
               ActionController::Base.helpers.link_to(
                 "View",
-                "/admin/customer_records/#{row[:id]}",
+                "/admin/customers/#{row[:id]}",
                 class: "ds-button ds-button--link ds-button--sm"
               )
             else

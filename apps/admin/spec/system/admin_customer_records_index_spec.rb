@@ -14,7 +14,7 @@ RSpec.describe "Admin customer records index", type: :system do
     fill_in "Password", with: password
     click_button "Login"
 
-    visit "/admin/customer_records"
+    visit "/admin/customers"
 
     expect(page).to have_content("Id")
     expect(page).to have_content("Name")
