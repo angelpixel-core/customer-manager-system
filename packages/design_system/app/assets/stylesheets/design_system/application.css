@@ -189,3 +189,54 @@ body {
 .ds-panel__body {
   color: var(--ds-color-text-muted);
 }
+
+.ds-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.ds-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--ds-color-surface);
+}
+
+.ds-table__head {
+  border-bottom: 1px solid var(--ds-color-border);
+}
+
+.ds-table__row {
+  border-bottom: 1px solid var(--ds-color-border);
+}
+
+.ds-table__body .ds-table__row:hover {
+  background: color-mix(in srgb, var(--ds-color-brand-soft) 45%, #ffffff);
+}
+
+.ds-table__cell {
+  padding: 0.75rem;
+  color: var(--ds-color-text);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.ds-table__cell--header {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ds-color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.ds-table__cell--align-right {
+  text-align: right;
+}
+
+.ds-table__cell--align-center {
+  text-align: center;
+}
+
+.ds-table__empty {
+  margin: 0;
+  color: var(--ds-color-text-muted);
+}

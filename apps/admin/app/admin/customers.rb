@@ -6,12 +6,34 @@ ActiveAdmin.register Customer::Record do
 
   permit_params :name, :email
 
-  index do
-    id_column
-    column :name
-    column :email
-    column :created_at
-    actions
+  index download_links: false do
+    columns = [
+      {key: :id, label: "Id", align: :right},
+      {key: :name, label: "Name"},
+      {key: :email, label: "Email"},
+      {key: :created_at, label: "Created At"},
+      {key: :actions, label: "Actions", align: :right}
+    ]
+
+    rows = collection.map do |record|
+      {
+        id: record.id,
+        name: record.name,
+        email: record.email,
+        created_at: helpers.l(record.created_at, format: :short),
+        actions: record
+      }
+    end
+
+    div class: "ds-panel" do
+      render DesignSystem::UI::Components::TableComponent.new(columns: columns, rows: rows, empty_state: "No customers yet") { |row, column|
+        if column[:key] == :actions
+          helpers.link_to("View", helpers.admin_customer_record_path(row[:actions]), class: "ds-button ds-button--link ds-button--sm")
+        else
+          row[column[:key]]
+        end
+      }
+    end
   end
 
   show do
