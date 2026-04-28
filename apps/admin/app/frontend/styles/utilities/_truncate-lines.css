@@ -1,0 +1,13 @@
+/* -------- TEXT TRUNCATION -------- */
+
+/**
+ * .truncate-lines
+ * Trunca texto en múltiples líneas usando -webkit-line-clamp.
+ * Muy útil para previews o cards con texto limitado.
+ */
+.truncate-lines {
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* configurable */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

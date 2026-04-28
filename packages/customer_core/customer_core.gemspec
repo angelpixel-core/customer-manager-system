@@ -9,9 +9,12 @@ Gem::Specification.new do |spec|
   spec.summary       = "Domain core for Customers Manager System"
   spec.description   = "DDD + Hexagonal domain layer for customer management"
   spec.homepage      = "https://github.com/angelpixel-core/customers-manager-system"
-  spec.license       = "MIT"
+  spec.license       = "Apache-2.0"
 
   spec.required_ruby_version = ">= 3.2.0"
+
+  spec.add_dependency "zeitwerk", "~> 2.6"
+  spec.add_development_dependency "rspec", "~> 3.0"
 
   spec.files = Dir.glob("lib/**/*")
 
