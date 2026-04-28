@@ -90,6 +90,47 @@ jobs:
       - name: Run admin CI pipeline
         run: bin/ci
 
+  admin-reek:
+    name: Admin Reek (baseline)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    continue-on-error: true
+    defaults:
+      run:
+        working-directory: apps/admin
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "4.0.3"
+          bundler-cache: true
+          working-directory: apps/admin
+
+      - name: Reek full report (non-blocking)
+        run: bundle exec reek app lib --format github --no-progress
+
+      - name: Reek changed Ruby files
+        if: github.event_name == 'pull_request'
+        run: |
+          CHANGED=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep '^apps/admin/.*\.rb$' | tr '\n' ' ')
+          if [ -z "$CHANGED" ]; then
+            echo "No changed Ruby files under apps/admin"
+            exit 0
+          fi
+
+          RELATIVE=""
+          for file in $CHANGED; do
+            RELATIVE="$RELATIVE ${file#apps/admin/}"
+          done
+
+          echo "Checking changed files:$RELATIVE"
+          bundle exec reek --no-progress $RELATIVE
+
   admin-gates:
     name: Admin layered gates
     runs-on: ubuntu-latest
