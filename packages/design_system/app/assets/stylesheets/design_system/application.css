@@ -307,3 +307,58 @@ body {
   margin: 0;
   color: var(--ds-color-text-muted);
 }
+
+.ds-header {
+  display: grid;
+  gap: var(--ds-space-sm);
+  border: 1px solid var(--ds-color-border);
+  border-radius: var(--ds-radius-lg);
+  background: var(--ds-color-surface);
+  padding: var(--ds-space-md);
+}
+
+.ds-header__title {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.ds-header__nav {
+  display: block;
+}
+
+.ds-header__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-sm);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ds-header__item {
+  margin: 0;
+}
+
+.ds-header__user {
+  color: var(--ds-color-text-muted);
+  font-size: 0.9rem;
+}
+
+.ds-filter-group {
+  display: grid;
+  gap: var(--ds-space-sm);
+  border: 1px solid var(--ds-color-border);
+  border-radius: var(--ds-radius-md);
+  background: var(--ds-color-surface);
+  padding: var(--ds-space-md);
+}
+
+.ds-filter-group__label {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.ds-filter-group__content {
+  display: grid;
+  gap: var(--ds-space-sm);
+}
