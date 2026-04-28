@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.summary = "Shared UI design system for Customers Manager"
   spec.description = "Atomic Design package with tokens, components, rules, and docs"
   spec.homepage = "https://github.com/angelpixel-core/customers-manager-system"
-  spec.license = "MIT"
+  spec.license = "Apache-2.0"
   spec.required_ruby_version = ">= 3.2.0"
 
   spec.files = Dir.glob("{lib,app,docs}/**/*") + ["README.md"]
