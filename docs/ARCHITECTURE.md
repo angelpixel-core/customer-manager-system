@@ -192,6 +192,14 @@ class SomeAction
 end
 ```
 
+# ✅ Result Convention (Ports/Interfaces)
+
+Application ports/interfaces return `CustomerCore::Application::Result`.
+
+- `Success(value)` for successful operations.
+- `Failure(code:, message:, cause:)` for expected adapter/application failures.
+- Do not use exceptions as normal control flow between use cases and adapters.
+
 # 🚀 🧩 Rails App (apps/admin)
 
 ```
