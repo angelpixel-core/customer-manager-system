@@ -131,6 +131,36 @@ jobs:
           echo "Checking changed files:$RELATIVE"
           bundle exec reek --no-progress $RELATIVE
 
+  admin-rubycritic:
+    name: Admin RubyCritic (baseline)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    continue-on-error: true
+    defaults:
+      run:
+        working-directory: apps/admin
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "4.0.3"
+          bundler-cache: true
+          working-directory: apps/admin
+
+      - name: Generate RubyCritic HTML report
+        run: bundle exec rubycritic app lib --no-browser --path tmp/rubycritic-ci
+
+      - name: Upload RubyCritic artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rubycritic-admin-report
+          path: apps/admin/tmp/rubycritic-ci
+          if-no-files-found: error
+
   admin-gates:
     name: Admin layered gates
     runs-on: ubuntu-latest
