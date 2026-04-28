@@ -94,7 +94,6 @@ jobs:
     name: Admin Reek (baseline)
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    continue-on-error: true
     defaults:
       run:
         working-directory: apps/admin
@@ -111,10 +110,11 @@ jobs:
           bundler-cache: true
           working-directory: apps/admin
 
-      - name: Reek full report (non-blocking)
+      - name: Reek full report (visibility)
+        continue-on-error: true
         run: bundle exec reek app lib --format github --no-progress
 
-      - name: Reek changed Ruby files
+      - name: Reek changed Ruby files (blocking)
         if: github.event_name == 'pull_request'
         run: |
           CHANGED=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep '^apps/admin/.*\.rb$' | tr '\n' ' ')
