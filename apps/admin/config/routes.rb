@@ -1,8 +1,11 @@
+require_relative "routes/admin/customers_routes"
+
 Rails.application.routes.draw do
   if Rails.env.development? && defined?(Lookbook::Engine)
     mount Lookbook::Engine, at: "/lookbook"
   end
 
+  extend Admin::CustomersRoutes
   ActiveAdmin.routes(self)
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
