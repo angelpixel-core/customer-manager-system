@@ -1,0 +1,62 @@
+name: Feature request
+description: Propose a feature aligned to current architecture
+title: "feat: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem statement
+      description: What user or business problem are we solving?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Describe the expected behavior and scope.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: layer
+    attributes:
+      label: Primary layer
+      options:
+        - Domain/Core (customer_core)
+        - Admin delivery layer
+        - Platform events/integrations
+        - Docs/process
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: architecture_checks
+    attributes:
+      label: Architecture checks
+      options:
+        - label: Keeps domain free from Rails/ActiveRecord concerns
+        - label: Uses ports/interfaces for cross-layer boundaries
+        - label: Follows Result convention at application boundaries
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: risks
+    attributes:
+      label: Risks / tradeoffs
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional context
