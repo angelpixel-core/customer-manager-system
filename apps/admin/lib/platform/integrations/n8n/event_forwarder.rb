@@ -21,23 +21,29 @@ module Platform
         end
 
         # @param platform_event [Platform::Events::Event]
-        # @return [void]
+        # @return [CustomerCore::Application::Result]
         def call(platform_event)
           payload = @serializer.serialize(platform_event)
-          return unless payload
+          return CustomerCore::Application::Result.success unless payload
 
           if @webhook_url.to_s.strip.empty?
             @logger.info("N8n forwarder skipped: webhook URL not configured")
-            return
+            return CustomerCore::Application::Result.success(metadata: {skipped: true})
           end
 
           response = @client.post_json(url: @webhook_url, payload: payload)
-          return if response.is_a?(Net::HTTPSuccess)
+          return CustomerCore::Application::Result.success if response.is_a?(Net::HTTPSuccess)
 
-          raise StandardError, "n8n forward failed: HTTP #{response.code}"
+          message = "n8n forward failed: HTTP #{response.code}"
+          @logger.error("N8n forwarder failed for #{platform_event.name}: #{message}")
+
+          CustomerCore::Application::Result.failure(
+            code: :n8n_http_error,
+            message: message
+          )
         rescue StandardError => e
           @logger.error("N8n forwarder failed for #{platform_event.name}: #{e.class} - #{e.message}")
-          raise
+          CustomerCore::Application::Result.failure(code: :n8n_forward_failed, message: e.message, cause: e)
         end
       end
     end

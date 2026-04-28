@@ -35,7 +35,7 @@ ActiveAdmin.register Customer::Record do
   controller do
     # @return [void]
     def create
-      CustomerCore::Application::UseCases::Customer::Create.call(
+      result = CustomerCore::Application::UseCases::Customer::Create.call(
         repo: Admin::Infrastructure::Repositories::ActiveRecord::CustomerRepository.new,
         publisher: CustomerCore::Application::Interfaces::Events::EventBus.new(
           publisher: Admin::Infrastructure::Events::FaktoryEventBus.new
@@ -46,11 +46,14 @@ ActiveAdmin.register Customer::Record do
         input: customer_params
       )
 
+      unless result.success?
+        flash.now[:error] = result.message
+        @customer_record = Customer::Record.new(customer_params)
+        render :new, status: :unprocessable_entity
+        return
+      end
+
       redirect_to admin_customer_records_path, notice: "Customer created"
-    rescue ArgumentError, ActiveRecord::RecordInvalid => e
-      flash.now[:error] = e.message
-      @customer_record = Customer::Record.new(customer_params)
-      render :new, status: :unprocessable_entity
     end
 
     private

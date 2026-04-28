@@ -13,11 +13,12 @@ RSpec.describe Platform::Events::EventBus do
       dispatched_event = platform_event
     end
 
-    described_class.new(registry: registry).publish(raw_event)
+    result = described_class.new(registry: registry).publish(raw_event)
 
     expect(dispatched_event).to be_a(Platform::Events::Event)
     expect(dispatched_event.raw_event).to eq(raw_event)
     expect(dispatched_event.name).to eq("CustomerCore::Events::Customer::Created")
+    expect(result).to be_success
   end
 
   it "does nothing when event has no handlers" do
@@ -25,7 +26,8 @@ RSpec.describe Platform::Events::EventBus do
       CustomerCore::Domain::Customer.new(name: "Angel", email: "test@mail.com")
     )
 
-    expect { described_class.new(registry: registry).publish(raw_event) }.not_to raise_error
+    result = described_class.new(registry: registry).publish(raw_event)
+    expect(result).to be_success
   end
 
   it "retries handler and sends to dead letter queue after exhaustion" do
@@ -53,7 +55,7 @@ RSpec.describe Platform::Events::EventBus do
     expect(metrics).to receive(:failure).once
     expect(metrics).to receive(:dead_letter_recorded).once
 
-    described_class.new(
+    result = described_class.new(
       registry: registry,
       retry_handler: retry_handler,
       dead_letter_queue: dead_letter_queue,
@@ -61,5 +63,7 @@ RSpec.describe Platform::Events::EventBus do
     ).publish(raw_event)
 
     expect(attempts).to eq(3)
+    expect(result).to be_failure
+    expect(result.code).to eq(:handler_exhausted)
   end
 end

@@ -5,11 +5,19 @@ module Admin
         # ActiveRecord adapter for persisting domain customers.
         class CustomerRepository < CustomerCore::Application::Interfaces::Customer::Repository
           # @param customer [CustomerCore::Domain::Customer]
-          # @return [Customer::Record]
+          # @return [CustomerCore::Application::Result]
           def create(customer)
-            ::Customer::Record.create!(
+            record = ::Customer::Record.create!(
               name: customer.name,
               email: customer.email
+            )
+
+            CustomerCore::Application::Result.success(record)
+          rescue ActiveRecord::ActiveRecordError => e
+            CustomerCore::Application::Result.failure(
+              code: :repository_create_failed,
+              message: e.message,
+              cause: e
             )
           end
         end

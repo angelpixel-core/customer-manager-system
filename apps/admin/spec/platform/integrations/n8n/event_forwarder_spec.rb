@@ -18,12 +18,14 @@ RSpec.describe Platform::Integrations::N8n::EventForwarder do
     allow(serializer).to receive(:serialize).with(platform_event).and_return(payload)
     allow(client).to receive(:post_json).with(url: "https://example.com/webhook", payload: payload).and_return(response)
 
-    described_class.new(
+    result = described_class.new(
       webhook_url: "https://example.com/webhook",
       serializer: serializer,
       client: client,
       logger: logger
     ).call(platform_event)
+
+    expect(result).to be_success
   end
 
   it "skips when webhook URL is not configured" do
@@ -31,10 +33,12 @@ RSpec.describe Platform::Integrations::N8n::EventForwarder do
     expect(client).not_to receive(:post_json)
     expect(logger).to receive(:info).with(/webhook URL not configured/)
 
-    described_class.new(webhook_url: nil, serializer: serializer, client: client, logger: logger).call(platform_event)
+    result = described_class.new(webhook_url: nil, serializer: serializer, client: client, logger: logger).call(platform_event)
+    expect(result).to be_success
+    expect(result.metadata).to eq({skipped: true})
   end
 
-  it "raises and logs when client returns non-success response" do
+  it "returns failure and logs when client returns non-success response" do
     payload = {event_name: "customer.created"}
     response = Net::HTTPInternalServerError.new("1.1", "500", "Internal Server Error")
 
@@ -42,13 +46,14 @@ RSpec.describe Platform::Integrations::N8n::EventForwarder do
     allow(client).to receive(:post_json).and_return(response)
     expect(logger).to receive(:error).with(/N8n forwarder failed/)
 
-    expect {
-      described_class.new(
-        webhook_url: "https://example.com/webhook",
-        serializer: serializer,
-        client: client,
-        logger: logger
-      ).call(platform_event)
-    }.to raise_error(StandardError, /n8n forward failed/)
+    result = described_class.new(
+      webhook_url: "https://example.com/webhook",
+      serializer: serializer,
+      client: client,
+      logger: logger
+    ).call(platform_event)
+
+    expect(result).to be_failure
+    expect(result.code).to eq(:n8n_http_error)
   end
 end

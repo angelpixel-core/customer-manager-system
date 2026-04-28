@@ -8,7 +8,7 @@ class CustomersController < ApplicationController
 
   # @return [void]
   def create
-    CustomerCore::Application::UseCases::Customer::Create.call(
+    result = CustomerCore::Application::UseCases::Customer::Create.call(
       repo: Admin::Infrastructure::Repositories::ActiveRecord::CustomerRepository.new,
       publisher: CustomerCore::Application::Interfaces::Events::EventBus.new(
         publisher: Admin::Infrastructure::Events::FaktoryEventBus.new
@@ -18,6 +18,11 @@ class CustomersController < ApplicationController
       dead_letter_store: Admin::Infrastructure::Events::RailsDeadLetterStore.new,
       input: customer_params
     )
+
+    unless result.success?
+      redirect_to admin_customers_path, alert: result.message
+      return
+    end
 
     redirect_to admin_customers_path
   end

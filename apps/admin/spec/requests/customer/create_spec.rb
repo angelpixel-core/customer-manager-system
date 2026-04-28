@@ -26,7 +26,7 @@ RSpec.describe "CreateCustomer", type: :request do
         dead_letter_store: an_instance_of(Admin::Infrastructure::Events::RailsDeadLetterStore),
         input: {name: "Angel", email: "test@mail.com"}
       )
-    )
+    ).and_return(CustomerCore::Application::Result.success)
 
     post "/admin/customers", params: {
       name: "Angel",
@@ -57,16 +57,15 @@ RSpec.describe "CreateCustomer", type: :request do
 
   it "persists dead letter when publisher fails during request flow" do
     allow_any_instance_of(CustomerCore::Application::Interfaces::Events::EventBus).to receive(:publish)
-      .and_raise(StandardError.new("publish boom"))
+      .and_return(CustomerCore::Application::Result.failure(code: :publish_failed, message: "publish boom"))
 
     expect {
-      begin
-        post "/admin/customers", params: {
-          name: "Failing",
-          email: "failing@test.com"
-        }
-      rescue StandardError
-      end
+      post "/admin/customers", params: {
+        name: "Failing",
+        email: "failing@test.com"
+      }
     }.to change(Platform::Events::DeadLetterRecord, :count).by(1)
+
+    expect(response).to have_http_status(:redirect)
   end
 end

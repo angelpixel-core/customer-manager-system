@@ -21,20 +21,23 @@ module Platform
       end
 
       # @param event [Object]
-      # @return [void]
+      # @return [CustomerCore::Application::Result]
       def publish(event)
         platform_event = Event.new(raw_event: event)
 
         @registry.handlers_for(event).each do |handler|
-          publish_to_handler(handler: handler, platform_event: platform_event)
+          handler_result = publish_to_handler(handler: handler, platform_event: platform_event)
+          return handler_result if handler_result.failure?
         end
+
+        CustomerCore::Application::Result.success
       end
 
       private
 
       # @param handler [#call]
       # @param platform_event [Platform::Events::Event]
-      # @return [void]
+      # @return [CustomerCore::Application::Result]
       def publish_to_handler(handler:, platform_event:)
         @retry_handler.call(
           on_retry: lambda do |retry_data|
@@ -47,8 +50,10 @@ module Platform
             )
           end
         ) do
-          handler.call(platform_event)
+          result = handler.call(platform_event)
+          normalize_handler_result(result)
         end
+        CustomerCore::Application::Result.success
       rescue RetryHandler::ExhaustedRetriesError => exhausted_error
         @metrics.failure(
           event_name: platform_event.name,
@@ -71,6 +76,22 @@ module Platform
           handler: handler_name(handler),
           error_class: exhausted_error.error.class.name
         )
+
+        CustomerCore::Application::Result.failure(
+          code: :handler_exhausted,
+          message: exhausted_error.message,
+          cause: exhausted_error.error,
+          metadata: {handler: handler_name(handler), attempts: exhausted_error.attempts}
+        )
+      end
+
+      # @param result [Object]
+      # @return [void]
+      def normalize_handler_result(result)
+        return if result.nil?
+        return if !result.respond_to?(:failure?)
+
+        raise StandardError, result.message if result.failure?
       end
 
       # @param handler [#call]

@@ -6,9 +6,12 @@ module Admin
       class RailsNotifier < CustomerCore::Application::Interfaces::Notifier
         # @param event [Object]
         # @param context [Hash]
-        # @return [void]
+        # @return [CustomerCore::Application::Result]
         def notify(event:, context: {})
           Rails.logger.info("Notifier event=#{event.class} context=#{context.inspect}")
+          CustomerCore::Application::Result.success
+        rescue StandardError => e
+          CustomerCore::Application::Result.failure(code: :notify_failed, message: e.message, cause: e)
         end
       end
     end

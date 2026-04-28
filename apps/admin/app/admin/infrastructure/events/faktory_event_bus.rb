@@ -14,7 +14,7 @@ module Admin
         end
 
         # @param event [Object]
-        # @return [void]
+        # @return [CustomerCore::Application::Result]
         def publish(event)
           @event_bus.publish(event)
         end
@@ -35,11 +35,14 @@ module Admin
         end
 
         # @param platform_event [Platform::Events::Event]
-        # @return [void]
+        # @return [CustomerCore::Application::Result]
         def handle_customer_created(platform_event)
-          return if Rails.env.test?
+          return CustomerCore::Application::Result.success if Rails.env.test?
 
           Admin::Infrastructure::SendWelcomeEmailWorker.perform_async(platform_event.raw_event.customer.email)
+          CustomerCore::Application::Result.success
+        rescue StandardError => e
+          CustomerCore::Application::Result.failure(code: :enqueue_failed, message: e.message, cause: e)
         end
       end
     end

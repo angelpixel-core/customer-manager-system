@@ -14,7 +14,7 @@ module Admin
         # @param event [Object]
         # @param error [StandardError]
         # @param context [Hash]
-        # @return [void]
+        # @return [CustomerCore::Application::Result]
         def record(event:, error:, context: {})
           @dead_letter_queue.push(event: event, error: error, metadata: {source: "rails_dead_letter_store"})
 
@@ -27,6 +27,10 @@ module Admin
           Rails.logger.error(
             "Dead letter persisted event=#{event.class} error=#{error.class}: #{error.message} context=#{context.inspect}"
           )
+
+          CustomerCore::Application::Result.success
+        rescue StandardError => e
+          CustomerCore::Application::Result.failure(code: :dead_letter_persist_failed, message: e.message, cause: e)
         end
       end
     end
