@@ -1,0 +1,144 @@
+name: CI
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/**"
+      - "apps/admin/**"
+      - "packages/customer_core/**"
+  push:
+    branches:
+      - main
+      - development
+      - "feat/**"
+      - "fix/**"
+      - "epic/**"
+      - "story/**"
+    paths:
+      - ".github/workflows/**"
+      - "apps/admin/**"
+      - "packages/customer_core/**"
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  core-tests:
+    name: Core tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: packages/customer_core
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2"
+          bundler-cache: true
+          working-directory: packages/customer_core
+
+      - name: Run core specs
+        run: bundle exec rspec
+
+  admin-quality-security:
+    name: Admin quality and security
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: apps/admin
+    env:
+      RUBOCOP_CACHE_ROOT: tmp/rubocop
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2"
+          bundler-cache: true
+          working-directory: apps/admin
+
+      - name: Prepare RuboCop cache
+        uses: actions/cache@v4
+        env:
+          DEPENDENCIES_HASH: ${{ hashFiles('apps/admin/.ruby-version', 'apps/admin/**/.rubocop.yml', 'apps/admin/**/.rubocop_todo.yml', 'apps/admin/Gemfile.lock') }}
+        with:
+          path: apps/admin/${{ env.RUBOCOP_CACHE_ROOT }}
+          key: rubocop-${{ runner.os }}-${{ env.DEPENDENCIES_HASH }}-${{ github.ref_name == github.event.repository.default_branch && github.run_id || 'default' }}
+          restore-keys: |
+            rubocop-${{ runner.os }}-${{ env.DEPENDENCIES_HASH }}-
+
+      - name: Lint with RuboCop
+        run: bin/rubocop -f github
+
+      - name: Scan for Rails security issues
+        run: bin/brakeman --no-pager
+
+      - name: Scan gem vulnerabilities
+        run: bin/bundler-audit
+
+  admin-gates:
+    name: Admin layered gates
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/customers_manager_system_test
+      N8N_WEBHOOK_URL: https://example.com/webhook
+    services:
+      postgres:
+        image: postgres:16
+        ports:
+          - "5432:5432"
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: customers_manager_system_test
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby (admin)
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2"
+          bundler-cache: true
+          working-directory: apps/admin
+
+      - name: Set up Ruby (core)
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2"
+          bundler-cache: true
+          working-directory: packages/customer_core
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/admin/package-lock.json
+
+      - name: Install node modules
+        run: npm ci
+        working-directory: apps/admin
+
+      - name: Prepare admin test DB
+        run: bundle exec rails db:prepare
+        working-directory: apps/admin
+
+      - name: Run layered gate checks
+        run: bin/gates
+        working-directory: apps/admin
