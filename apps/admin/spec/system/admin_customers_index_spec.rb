@@ -1,7 +1,7 @@
 require "rails_helper"
 require "securerandom"
 
-RSpec.describe "Admin customer records index", type: :system do
+RSpec.describe "Admin customers index", type: :system do
   it "renders the design system table with actions" do
     email = "admin-#{SecureRandom.hex(4)}@example.com"
     password = "ChangeMe123!"
