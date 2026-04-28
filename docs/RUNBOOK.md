@@ -90,6 +90,23 @@ Opcional: revisar UI de Faktory en `http://localhost:7420`.
 
 ## 6) Verificacion de tests
 
+Comando unico (recomendado):
+
+```bash
+cd apps/admin
+bin/gates
+```
+
+Ejecucion por etapa con el mismo comando:
+
+```bash
+bin/gates core
+bin/gates adapters
+bin/gates platform_events
+bin/gates integrations
+bin/gates e2e
+```
+
 Gate por capas (en orden):
 
 1) Core (unit/use-case):
