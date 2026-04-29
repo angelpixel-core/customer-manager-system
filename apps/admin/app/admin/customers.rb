@@ -8,65 +8,51 @@ ActiveAdmin.register Customer::Record, as: "Customer" do
   permit_params :name, :email
 
   index download_links: false do
-    div class: "u-mb-sm" do
-      text_node helpers.render(
-        DesignSystem::UI::Components::HeaderComponent.new(
-          title: "Customers",
-          navigation: [
-            {label: "Dashboard", href: "/admin"},
-            {label: "Customers", href: "/admin/customers"}
-          ]
-        )
-      )
-    end
-
-    div class: "u-mb-sm" do
-      text_node helpers.form_with(url: helpers.admin_customers_path, method: :get, local: true, class: "ds-filter-form") {
-        helpers.safe_join([
-          helpers.render(DesignSystem::UI::Composites::FilterGroupComponent.new(label: "Email")) {
-            helpers.safe_join([
-              helpers.render(DesignSystem::UI::Primitives::LabelComponent.new(text: "Operator", for_id: "email_operator")),
-              helpers.render(
-                DesignSystem::UI::Primitives::SelectComponent.new(
-                  name: :email_operator,
-                  options: [
-                    {label: "Contains", value: "contains"},
-                    {label: "Equals", value: "eq"}
-                  ],
-                  value: params[:email_operator] || "contains",
-                  classes: "u-mb-sm"
-                )
-              ),
-              helpers.render(
-                DesignSystem::UI::Primitives::InputComponent.new(
-                  name: :email_query,
-                  label: "Email",
-                  value: params[:email_query],
-                  placeholder: "customer@example.com"
-                )
+    filter_form = helpers.form_with(url: helpers.admin_customers_path, method: :get, local: true, class: "ds-filter-form") {
+      helpers.safe_join([
+        helpers.render(DesignSystem::UI::Composites::FilterGroupComponent.new(label: "Email")) {
+          helpers.safe_join([
+            helpers.render(DesignSystem::UI::Primitives::LabelComponent.new(text: "Operator", for_id: "email_operator")),
+            helpers.render(
+              DesignSystem::UI::Primitives::SelectComponent.new(
+                name: :email_operator,
+                options: [
+                  {label: "Contains", value: "contains"},
+                  {label: "Equals", value: "eq"}
+                ],
+                value: params[:email_operator] || "contains",
+                classes: "u-mb-sm"
               )
-            ])
-          },
-          helpers.render(DesignSystem::UI::Composites::FilterGroupComponent.new(label: "Name")) {
+            ),
             helpers.render(
               DesignSystem::UI::Primitives::InputComponent.new(
-                name: :name_query,
-                label: "Name",
-                value: params[:name_query],
-                placeholder: "Customer name"
+                name: :email_query,
+                label: "Email",
+                value: params[:email_query],
+                placeholder: "customer@example.com"
               )
             )
-          },
-          helpers.content_tag(:div, class: "u-mt-sm") {
-            helpers.safe_join([
-              helpers.render(DesignSystem::UI::Primitives::ButtonComponent.new(label: "Apply filters", type: :submit, variant: :primary)),
-              helpers.tag.span(" "),
-              helpers.render(DesignSystem::UI::Primitives::LinkComponent.new(label: "Clear", href: helpers.admin_customers_path, variant: :subtle, size: :sm))
-            ])
-          }
-        ])
-      }
-    end
+          ])
+        },
+        helpers.render(DesignSystem::UI::Composites::FilterGroupComponent.new(label: "Name")) {
+          helpers.render(
+            DesignSystem::UI::Primitives::InputComponent.new(
+              name: :name_query,
+              label: "Name",
+              value: params[:name_query],
+              placeholder: "Customer name"
+            )
+          )
+        },
+        helpers.content_tag(:div, class: "u-mt-sm") {
+          helpers.safe_join([
+            helpers.render(DesignSystem::UI::Primitives::ButtonComponent.new(label: "Apply filters", type: :submit, variant: :primary)),
+            helpers.tag.span(" "),
+            helpers.render(DesignSystem::UI::Primitives::LinkComponent.new(label: "Clear", href: helpers.admin_customers_path, variant: :subtle, size: :sm))
+          ])
+        }
+      ])
+    }
 
     columns = [
       {key: :id, label: "Id", align: :right},
@@ -86,22 +72,37 @@ ActiveAdmin.register Customer::Record, as: "Customer" do
       }
     end
 
-    div class: "ds-panel" do
-      render DesignSystem::UI::Components::TableComponent.new(columns: columns, rows: rows, empty_state: "No customers yet") { |row, column|
-        if column[:key] == :actions
+    table_markup = helpers.render(DesignSystem::UI::Components::TableComponent.new(columns: columns, rows: rows, empty_state: "No customers yet")) { |row, column|
+      if column[:key] == :actions
+        helpers.render(
+          DesignSystem::UI::Primitives::LinkComponent.new(
+            label: "View",
+            href: helpers.admin_customer_path(row[:actions]),
+            variant: :default,
+            size: :sm
+          )
+        )
+      else
+        row[column[:key]]
+      end
+    }
+
+    text_node helpers.render(DesignSystem::UI::Components::PageComponent.new) {
+      helpers.safe_join([
+        helpers.render(DesignSystem::UI::Components::PageHeaderComponent.new(title: "Customers")) {
           helpers.render(
             DesignSystem::UI::Primitives::LinkComponent.new(
-              label: "View",
-              href: helpers.admin_customer_path(row[:actions]),
+              label: "New customer",
+              href: helpers.new_admin_customer_path,
               variant: :default,
               size: :sm
             )
           )
-        else
-          row[column[:key]]
-        end
-      }
-    end
+        },
+        helpers.render(DesignSystem::UI::Components::SectionComponent.new(title: "Filters")) { filter_form },
+        helpers.render(DesignSystem::UI::Components::SectionComponent.new(title: "Results")) { table_markup }
+      ])
+    }
   end
 
   show do
