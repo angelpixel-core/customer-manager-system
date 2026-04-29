@@ -92,7 +92,7 @@ ActiveAdmin.register Customer::Record, as: "Customer" do
         helpers.render(DesignSystem::UI::Components::PageHeaderComponent.new(title: "Customers")) {
           helpers.render(
             DesignSystem::UI::Primitives::LinkComponent.new(
-              label: "New customer",
+              label: "New Customer",
               href: helpers.new_admin_customer_path,
               variant: :default,
               size: :sm
@@ -100,7 +100,7 @@ ActiveAdmin.register Customer::Record, as: "Customer" do
           )
         },
         helpers.render(DesignSystem::UI::Components::SectionComponent.new(title: "Filters")) { filter_form },
-        helpers.render(DesignSystem::UI::Components::SectionComponent.new(title: "Results")) { table_markup }
+        helpers.render(DesignSystem::UI::Components::SectionComponent.new) { table_markup }
       ])
     }
   end
