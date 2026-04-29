@@ -1,57 +1,101 @@
-# Component Catalog (Initial)
+# Component Catalog
 
-## Atoms
+Canonical namespaces:
+
+- `DesignSystem::UI::Primitives::*`
+- `DesignSystem::UI::Components::*`
+- `DesignSystem::UI::Composites::*`
+
+Legacy aliases under `Atoms` and `Organisms` remain temporarily for migration safety.
+
+## Primitives
 
 ### ButtonComponent
 
-- Path: `lib/design_system/ui/atoms/button_component.rb`
-- Responsibility: action/CTA link or button with variants.
+- Path: `lib/design_system/ui/primitives/button_component.rb`
+- Responsibility: action/CTA control as link or native button.
+- API:
+  - `label:` String (required)
+  - `variant:` Symbol (default: `:primary`)
+  - `type:` Symbol/String for native buttons (default: `:button`)
+  - `href:` Optional URL (when present, renders link)
+  - `classes:` Optional custom classes
 
 ### InputComponent
 
-- Path: `lib/design_system/ui/atoms/input_component.rb`
-- Responsibility: labeled input field with optional placeholder.
+- Path: `lib/design_system/ui/primitives/input_component.rb`
+- Responsibility: labeled text input primitive.
+- API:
+  - `name:` Symbol/String (required)
+  - `label:` String (required)
+  - `value:` Optional current value
+  - `type:` Input type (default: `:text`)
+  - `placeholder:` Optional placeholder text
 
-## Molecules
+### SelectComponent
 
-### FormFieldComponent
+- Path: `lib/design_system/ui/primitives/select_component.rb`
+- Responsibility: select control with optional label.
+- API:
+  - `name:` Symbol/String (required)
+  - `options:` Array of hashes (`{label:, value:}`)
+  - `value:` Optional selected value
+  - `label:` Optional label text
+  - `include_blank:` Optional blank option label
+  - `classes:` Optional custom classes
 
-- Path: `lib/design_system/ui/molecules/form_field_component.rb`
-- Responsibility: wraps a label + custom field block for forms.
+### LabelComponent
 
-## Organisms
+- Path: `lib/design_system/ui/primitives/label_component.rb`
+- Responsibility: standalone semantic label.
+- API:
+  - `text:` String (required)
+  - `for_id:` Optional target element id
+  - `classes:` Optional custom classes
 
-### PanelComponent
+### LinkComponent
 
-- Path: `lib/design_system/ui/organisms/panel_component.rb`
-- Responsibility: reusable section shell with title and body.
+- Path: `lib/design_system/ui/primitives/link_component.rb`
+- Responsibility: semantic link primitive with style variants.
+- API:
+  - `label:` String (required)
+  - `href:` String (required)
+  - `variant:` Symbol (default: `:default`)
+  - `size:` Symbol (default: `:md`)
+  - `classes:` Optional custom classes
 
 ## Components
+
+### CardComponent
+
+- Path: `lib/design_system/ui/components/card_component.rb`
+- Responsibility: neutral section shell with title + content body.
+- Note: `DesignSystem::UI::Organisms::PanelComponent` is currently an alias to this component.
 
 ### TableComponent
 
 - Path: `lib/design_system/ui/components/table_component.rb`
-- Responsibility: renders responsive data tables with configurable columns and optional custom cells.
+- Responsibility: responsive data table with configurable columns and optional custom cells.
 - API:
   - `columns:` Array of hashes with `key:` and `label:` (optional `align:`)
   - `rows:` Enumerable of records (hashes or objects)
-  - `empty_state:` Optional text for empty datasets
+  - `empty_state:` Optional empty-state text
 
-Example:
+### HeaderComponent
 
-```erb
-<%= render DesignSystem::UI::Components::TableComponent.new(
-  columns: [
-    { key: :id, label: "Id", align: :right },
-    { key: :name, label: "Name" },
-    { key: :email, label: "Email" }
-  ],
-  rows: @customers
-) do |row, column| %>
-  <% if column[:key] == :actions %>
-    <%= link_to "View", admin_customer_record_path(row), class: "ds-button ds-button--link ds-button--sm" %>
-  <% else %>
-    <%= row.public_send(column[:key]) %>
-  <% end %>
-<% end %>
-```
+- Path: `lib/design_system/ui/components/header_component.rb`
+- Responsibility: neutral header with title, navigation, and optional user info.
+- API:
+  - `title:` String (required)
+  - `navigation:` Array of hashes (`{label:, href:}`)
+  - `user_email:` Optional String
+
+## Composites
+
+### FilterGroupComponent
+
+- Path: `lib/design_system/ui/composites/filter_group_component.rb`
+- Responsibility: grouped filter UI block with label and slotted content.
+- API:
+  - `label:` String (required)
+  - `classes:` Optional custom classes
