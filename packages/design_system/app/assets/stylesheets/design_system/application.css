@@ -456,3 +456,41 @@ body {
   display: grid;
   gap: var(--ds-space-sm);
 }
+
+.ds-filter-bar {
+  border: 1px solid var(--ds-color-border);
+  border-radius: var(--ds-radius-md);
+  background: var(--ds-color-surface);
+  padding: var(--ds-space-sm);
+}
+
+.ds-filter-bar__content {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: var(--ds-space-sm);
+}
+
+.ds-filter-bar .ds-input,
+.ds-filter-bar .ds-select {
+  min-width: 12rem;
+  flex: 1 1 12rem;
+}
+
+.ds-filter-bar .ds-input__label,
+.ds-filter-bar .ds-select__label {
+  font-size: 0.8rem;
+  color: var(--ds-color-text-muted);
+}
+
+.ds-filter-bar .ds-button,
+.ds-filter-bar .ds-link {
+  margin-bottom: 0;
+  align-self: flex-end;
+}
+
+.ds-filter-bar .ds-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+}

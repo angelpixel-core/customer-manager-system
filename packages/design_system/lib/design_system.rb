@@ -15,6 +15,7 @@ require "design_system/ui/components/section_component"
 require "design_system/ui/components/table_cell_component"
 require "design_system/ui/components/table_row_component"
 require "design_system/ui/components/table_component"
+require "design_system/ui/composites/filter_bar_component"
 require "design_system/ui/composites/filter_group_component"
 require "design_system/ui/molecules/form_field_component"
 
