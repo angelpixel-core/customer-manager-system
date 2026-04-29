@@ -14,21 +14,50 @@ body.active_admin {
 body.active_admin #header {
   background: linear-gradient(120deg, var(--ds-color-brand-strong, #0f4e5a), var(--ds-color-brand, #16697a));
   min-height: 3rem;
+  padding: 0.5rem var(--ds-space-md, 1rem);
 }
 
-body.active_admin #header h1.site_title,
-body.active_admin #header ul.tabs > li > a {
+body.active_admin #header .ds-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
   color: #ffffff;
 }
 
-body.active_admin #header h1.site_title {
-  font-size: 1rem;
+body.active_admin #header .ds-header__title {
+  color: #ffffff;
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
   line-height: 1.2;
 }
 
-body.active_admin #header ul.tabs > li > a {
-  padding-top: 0.55rem;
-  padding-bottom: 0.55rem;
+body.active_admin #header .ds-header__nav {
+  margin-left: auto;
+}
+
+body.active_admin #header .ds-link {
+  color: #ffffff;
+  text-decoration-color: color-mix(in srgb, #ffffff 70%, transparent);
+}
+
+body.active_admin #header .ds-link:hover {
+  color: #ffffff;
+  text-decoration-color: #ffffff;
+}
+
+body.active_admin #header .ds-header__list {
+  gap: var(--ds-space-md, 1rem);
+  justify-content: flex-end;
+}
+
+body.active_admin #header .ds-header__user {
+  color: color-mix(in srgb, #ffffff 85%, transparent);
 }
 
 body.active_admin .panel,
@@ -49,7 +78,6 @@ body.active_admin.admin_customers.index #title_bar {
 
 body.active_admin.admin_customers.index #title_bar #titlebar_left,
 body.active_admin.admin_customers.index #title_bar #titlebar_right,
-body.active_admin.admin_customers.index .index_as_table,
 body.active_admin.admin_customers.index #index_footer {
   max-width: 80rem;
   margin-left: auto;
@@ -57,8 +85,11 @@ body.active_admin.admin_customers.index #index_footer {
 }
 
 body.active_admin.admin_customers.index .index_as_table {
-  padding-left: var(--ds-space-md, 1rem);
-  padding-right: var(--ds-space-md, 1rem);
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 body.active_admin.admin_customers.index #title_bar #titlebar_left {
@@ -106,4 +137,17 @@ body.active_admin.admin_customers.index #index_footer {
   margin-top: 0.75rem;
   padding-left: var(--ds-space-md, 1rem);
   padding-right: var(--ds-space-md, 1rem);
+}
+
+body.active_admin.admin_customers.index .ds-section {
+  width: 100%;
+  padding: var(--ds-space-lg, 1.5rem);
+}
+
+body.active_admin.admin_customers.index .ds-section__title {
+  padding: 0;
+}
+
+body.active_admin.admin_customers.index .ds-section__body {
+  padding: 0;
 }

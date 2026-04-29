@@ -17,4 +17,21 @@ RSpec.describe "Admin login", type: :system do
 
     expect(page).to have_current_path("/admin", ignore_query: true)
   end
+
+  it "logs out from topbar and redirects to login" do
+    email = "admin-#{SecureRandom.hex(4)}@example.com"
+    password = "ChangeMe123!"
+
+    Account.create!(email: email, password: password, status: :verified)
+
+    visit "/login"
+    fill_in "Login", with: email
+    fill_in "Password", with: password
+    click_button "Login"
+
+    visit "/admin/customers"
+    click_link "Logout"
+
+    expect(page).to have_current_path("/login", ignore_query: true)
+  end
 end

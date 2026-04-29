@@ -28,8 +28,10 @@ module DesignSystem
         end
 
         def navigation_item(item)
+          html_options = item.fetch(:html_options, {})
+
           helpers.content_tag(:li, class: "ds-header__item") do
-            helpers.link_to(item.fetch(:label), item.fetch(:href), class: "ds-link ds-link--default")
+            helpers.link_to(item.fetch(:label), item.fetch(:href), {class: "ds-link ds-link--default"}.merge(html_options))
           end
         end
       end

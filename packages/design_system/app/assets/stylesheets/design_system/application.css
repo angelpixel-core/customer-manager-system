@@ -258,12 +258,14 @@ body {
 /* ========================================================================== */
 
 .ds-page {
-  padding: var(--ds-space-lg) var(--ds-space-md);
+  padding-block: var(--ds-space-lg);
+  padding-inline: 0;
 }
 
 .ds-page__container {
   max-width: 80rem;
   margin: 0 auto;
+  padding-inline: var(--ds-space-md);
   display: grid;
   gap: var(--ds-space-lg);
 }
@@ -421,7 +423,8 @@ body {
 
 @media (max-width: 48rem) {
   .ds-page {
-    padding: var(--ds-space-md);
+    padding-block: var(--ds-space-md);
+    padding-inline: 0;
   }
 
   .ds-page-header {

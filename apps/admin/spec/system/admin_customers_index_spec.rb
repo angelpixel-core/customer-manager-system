@@ -16,6 +16,10 @@ RSpec.describe "Admin customers index", type: :system do
 
     visit "/admin/customers"
 
+    expect(page).to have_link("Customers", href: "/admin/customers")
+    expect(page).to have_link("Logout", href: "/logout")
+    expect(page).not_to have_link("Login", href: "/login")
+
     expect(page).to have_content("Id")
     expect(page).to have_content("Name")
     expect(page).to have_content("Email")
