@@ -177,7 +177,7 @@ jobs:
 
       - name: Upload RubyCritic artifact
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: rubycritic-admin-report
           path: apps/admin/tmp/rubycritic-ci
@@ -266,7 +266,7 @@ jobs:
 
       - name: Upload core YARD artifact
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: yard-core-docs
           path: packages/customer_core/docs/yard
@@ -296,7 +296,7 @@ jobs:
 
       - name: Upload design system YARD artifact
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: yard-design-system-docs
           path: packages/design_system/docs/yard
@@ -326,7 +326,7 @@ jobs:
 
       - name: Upload admin YARD artifact
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: yard-admin-docs
           path: apps/admin/docs/yard
