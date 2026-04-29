@@ -1,0 +1,13 @@
+/* Compact topbar navigation links. */
+.nav-link {
+  padding: 0.35rem 0.65rem;
+  border-radius: var(--radius-sm);
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+}

@@ -1,0 +1,12 @@
+/* -------- LAYOUT -------- */
+
+/**
+ * .clearfix
+ * Limpia floats en contenedores para evitar colapsos.
+ * Clásico fix para layouts fluidos con elementos flotantes.
+ */
+.clearfix::after {
+  content: "";
+  display: table;
+  clear: both;
+}

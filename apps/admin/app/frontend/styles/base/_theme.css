@@ -1,0 +1,17 @@
+/* Semantic color palette for the clean admin shell. */
+:root {
+  --color-bg: #f6f8fb;
+  --color-surface: #ffffff;
+  --color-surface-strong: #ecf1f7;
+  --color-border: #d4deea;
+
+  --color-text: #1c2a39;
+  --color-text-muted: #526375;
+
+  --color-brand: #16697a;
+  --color-brand-strong: #0f4e5a;
+  --color-brand-soft: #d8ecf1;
+
+  --color-success: #2a8f69;
+  --color-danger: #b93c3c;
+}

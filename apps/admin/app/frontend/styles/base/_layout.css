@@ -1,0 +1,97 @@
+/*
+ * Application shell layout styles.
+ * Includes responsive topbar, content container, and form controls.
+ */
+.app-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.app-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  background: linear-gradient(120deg, #0f4e5a, #16697a);
+  color: #ffffff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: var(--shadow-md);
+}
+
+.app-brand {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.app-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.app-main {
+  padding: var(--space-lg);
+}
+
+.app-container {
+  width: min(960px, 100%);
+  margin: 0 auto;
+}
+
+.surface-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+form {
+  display: grid;
+  gap: var(--space-md);
+}
+
+label {
+  display: inline-block;
+  font-weight: 600;
+  margin-bottom: var(--space-2xs);
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 0.6rem 0.75rem;
+  background: #ffffff;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid color-mix(in srgb, var(--color-brand) 30%, transparent);
+  border-color: var(--color-brand);
+}
+
+@media (max-width: 640px) {
+  .app-topbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .app-main {
+    padding: var(--space-md);
+  }
+
+  .surface-card {
+    padding: var(--space-lg);
+  }
+}

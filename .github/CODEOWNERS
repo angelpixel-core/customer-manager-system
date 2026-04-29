@@ -1,0 +1,15 @@
+# Global fallback
+* @angelpixel-core
+
+# Core domain/application package
+/packages/customer_core/ @angelpixel-core
+
+# Shared UI package
+/packages/design_system/ @angelpixel-core
+
+# Admin app and delivery layer
+/apps/admin/ @angelpixel-core
+
+# CI/workflows and governance
+/.github/ @angelpixel-core
+/docs/ @angelpixel-core
