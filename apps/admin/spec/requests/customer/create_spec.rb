@@ -2,14 +2,16 @@ require "rails_helper"
 
 RSpec.describe "CreateCustomer", type: :request do
   before do
-    allow_any_instance_of(CustomersController).to receive(:authenticate_admin).and_return(true)
+    allow_any_instance_of(ApplicationController).to receive(:authenticate_admin).and_return(true)
   end
 
   it "creates a customer and triggers async flow" do
     expect {
       post "/admin/customers", params: {
-        name: "Angel",
-        email: "test@mail.com"
+        customer_record: {
+          name: "Angel",
+          email: "test@mail.com"
+        }
       }
     }.to change(Customer::Record, :count).by(1)
 
@@ -29,8 +31,10 @@ RSpec.describe "CreateCustomer", type: :request do
     ).and_return(CustomerCore::Application::Result.success)
 
     post "/admin/customers", params: {
-      name: "Angel",
-      email: "test@mail.com"
+      customer_record: {
+        name: "Angel",
+        email: "test@mail.com"
+      }
     }
 
     expect(response).to have_http_status(:redirect)
@@ -47,8 +51,10 @@ RSpec.describe "CreateCustomer", type: :request do
 
     expect {
       post "/admin/customers", params: {
-        name: "E2E",
-        email: "e2e@test.com"
+        customer_record: {
+          name: "E2E",
+          email: "e2e@test.com"
+        }
       }
     }.to change(Customer::Record, :count).by(1)
 
@@ -61,8 +67,10 @@ RSpec.describe "CreateCustomer", type: :request do
 
     expect {
       post "/admin/customers", params: {
-        name: "Failing",
-        email: "failing@test.com"
+        customer_record: {
+          name: "Failing",
+          email: "failing@test.com"
+        }
       }
     }.to change(Platform::Events::DeadLetterRecord, :count).by(1)
 

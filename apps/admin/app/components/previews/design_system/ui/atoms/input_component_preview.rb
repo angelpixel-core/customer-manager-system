@@ -3,7 +3,7 @@ module DesignSystem
     module Atoms
       class InputComponentPreview < ViewComponent::Preview
         def text
-          render DesignSystem::UI::Atoms::InputComponent.new(
+          render DesignSystem::UI::Primitives::InputComponent.new(
             name: :name,
             label: "Customer name",
             placeholder: "Jane Doe"
@@ -11,7 +11,7 @@ module DesignSystem
         end
 
         def email
-          render DesignSystem::UI::Atoms::InputComponent.new(
+          render DesignSystem::UI::Primitives::InputComponent.new(
             name: :email,
             label: "Email",
             type: :email,

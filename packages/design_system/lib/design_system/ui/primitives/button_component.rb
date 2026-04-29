@@ -1,7 +1,7 @@
 module DesignSystem
   module UI
-    module Atoms
-      # Atomic button component supporting links and native buttons.
+    module Primitives
+      # Primitive button component supporting links and native buttons.
       class ButtonComponent < DesignSystem::UI::Component
         def initialize(label:, variant: :primary, type: :button, href: nil, classes: nil)
           @label = label

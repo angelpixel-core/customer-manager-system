@@ -3,15 +3,15 @@ module DesignSystem
     module Atoms
       class ButtonComponentPreview < ViewComponent::Preview
         def primary
-          render DesignSystem::UI::Atoms::ButtonComponent.new(
+          render DesignSystem::UI::Primitives::ButtonComponent.new(
             label: "Create Customer",
             variant: :primary,
-            href: "/admin/customer_records/new"
+            href: "/admin/customers/new"
           )
         end
 
         def default
-          render DesignSystem::UI::Atoms::ButtonComponent.new(
+          render DesignSystem::UI::Primitives::ButtonComponent.new(
             label: "Cancel",
             variant: :default,
             href: "/admin"

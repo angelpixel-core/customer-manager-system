@@ -1,7 +1,7 @@
 module DesignSystem
   module UI
-    module Atoms
-      # Atomic labeled input field component.
+    module Primitives
+      # Primitive labeled input field component.
       class InputComponent < DesignSystem::UI::Component
         def initialize(name:, label:, value: nil, type: :text, placeholder: nil)
           @name = name

@@ -142,6 +142,7 @@ jobs:
             [ -z "$file" ] && continue
             file="${file#./}"
             file="${file#apps/admin/}"
+            [ -f "$file" ] || continue
             RELATIVE+=("$file")
           done <<< "$CHANGED"
 

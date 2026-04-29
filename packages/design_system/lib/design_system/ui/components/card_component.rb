@@ -1,8 +1,8 @@
 module DesignSystem
   module UI
-    module Organisms
-      # Organism-level section panel with title and body.
-      class PanelComponent < DesignSystem::UI::Component
+    module Components
+      # Component-level section card with title and body.
+      class CardComponent < DesignSystem::UI::Component
         def initialize(title:)
           @title = title
         end

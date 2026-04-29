@@ -13,12 +13,12 @@ RSpec.describe "Admin customer form", type: :system do
     fill_in "Password", with: password
     click_button "Login"
 
-    visit "/admin/customers"
+    visit "/admin/customers/new"
 
     expect {
       fill_in "Name", with: "Customer One"
       fill_in "Email", with: "customer.one@example.com"
-      click_button "Create customer"
+      first("input[type='submit'], button[type='submit']").click
     }.to change(Customer::Record, :count).by(1)
 
     expect(page).to have_content("Customer One")

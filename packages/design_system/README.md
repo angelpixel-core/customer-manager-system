@@ -5,17 +5,17 @@ Shared Atomic Design system for the Customers Manager monorepo.
 ## Scope
 
 - Design tokens
-- Atomic components (atoms/molecules/organisms)
+- UI components by layer (primitives/components/composites)
 - Naming and usage rules
 - Internal docs for consistent UI implementation
 
 ## Namespacing
 
 - Ruby namespace: `DesignSystem::UI`
-- Atomic folders:
-  - `DesignSystem::UI::Atoms`
-  - `DesignSystem::UI::Molecules`
-  - `DesignSystem::UI::Organisms`
+- Canonical folders:
+  - `DesignSystem::UI::Primitives`
+  - `DesignSystem::UI::Components`
+  - `DesignSystem::UI::Composites`
 
 ## Asset Entry
 
@@ -32,7 +32,7 @@ Usage in Rails layout:
 Example button component:
 
 ```erb
-<%= render DesignSystem::UI::Atoms::ButtonComponent.new(label: "Create", href: "/admin/customer_records/new") %>
+<%= render DesignSystem::UI::Primitives::ButtonComponent.new(label: "Create", href: "/admin/customers/new") %>
 ```
 
 ## Documentation
