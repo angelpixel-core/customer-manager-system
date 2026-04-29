@@ -28,7 +28,14 @@ ActiveAdmin.register Customer::Record, as: "Customer" do
     div class: "ds-panel" do
       render DesignSystem::UI::Components::TableComponent.new(columns: columns, rows: rows, empty_state: "No customers yet") { |row, column|
         if column[:key] == :actions
-          helpers.link_to("View", helpers.admin_customer_path(row[:actions]), class: "ds-button ds-button--link ds-button--sm")
+          helpers.render(
+            DesignSystem::UI::Primitives::LinkComponent.new(
+              label: "View",
+              href: helpers.admin_customer_path(row[:actions]),
+              variant: :default,
+              size: :sm
+            )
+          )
         else
           row[column[:key]]
         end
