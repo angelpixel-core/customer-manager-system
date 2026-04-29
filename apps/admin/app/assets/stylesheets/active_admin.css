@@ -31,3 +31,15 @@ body.active_admin .button,
 body.active_admin a.button {
   border-radius: var(--ds-radius-sm, 0.375rem);
 }
+
+body.active_admin.admin_customers.index #title_bar h2 {
+  display: none;
+}
+
+body.active_admin.admin_customers.index #title_bar {
+  padding-bottom: 0;
+}
+
+body.active_admin.admin_customers.index #title_bar .breadcrumb {
+  margin-bottom: 0.5rem;
+}
