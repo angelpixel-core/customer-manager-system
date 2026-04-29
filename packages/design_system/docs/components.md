@@ -70,7 +70,6 @@ Legacy aliases under `Atoms` and `Organisms` remain temporarily for migration sa
 
 - Path: `lib/design_system/ui/components/card_component.rb`
 - Responsibility: neutral section shell with title + content body.
-- Note: `DesignSystem::UI::Organisms::PanelComponent` is currently an alias to this component.
 
 ### TableComponent
 

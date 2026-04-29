@@ -46,7 +46,7 @@ Examples:
 
 ### Introduced
 
-- Legacy aliases under `Atoms` and `Organisms` exist to preserve compatibility during migration to canonical namespaces.
+- Legacy aliases under `Atoms` and `Organisms` were introduced to preserve compatibility during migration to canonical namespaces.
 
 ### Migration target
 
@@ -67,5 +67,5 @@ Examples:
 
 | Legacy namespace | Current usage count | Owner | Removal milestone |
 |---|---|---|---|
-| `DesignSystem::UI::Atoms::*` | TBD | UI/Frontend | After full namespace migration |
-| `DesignSystem::UI::Organisms::*` | TBD | UI/Frontend | After card/panel callsite migration |
+| `DesignSystem::UI::Atoms::*` | 0 | UI/Frontend | Completed in post-Fase B cleanup |
+| `DesignSystem::UI::Organisms::*` | 0 | UI/Frontend | Completed in post-Fase B cleanup |

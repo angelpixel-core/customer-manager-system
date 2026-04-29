@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe DesignSystem::UI::Atoms::InputComponent, type: :component do
+RSpec.describe DesignSystem::UI::Primitives::InputComponent, type: :component do
   it "renders label and input association" do
     result = render_inline(described_class.new(name: :email, label: "Email"))
 

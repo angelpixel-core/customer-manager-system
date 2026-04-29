@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe DesignSystem::UI::Atoms::ButtonComponent, type: :component do
+RSpec.describe DesignSystem::UI::Primitives::ButtonComponent, type: :component do
   it "renders primary button classes" do
     result = render_inline(described_class.new(label: "Create", variant: :primary))
 
