@@ -2,39 +2,37 @@
 ActiveAdmin.register Customer::Record, as: "Customer" do
   menu label: "Customers", priority: 2
   config.filters = false
+  config.batch_actions = false
 
   actions :index, :show, :new, :create
 
   permit_params :name, :email
 
   index download_links: false do
+    filters_active = params[:email_query].present? || params[:name_query].present?
+
     filter_form = helpers.form_with(url: helpers.admin_customers_path, method: :get, local: true, class: "ds-filter-form") {
-      helpers.safe_join([
-        helpers.render(DesignSystem::UI::Composites::FilterGroupComponent.new(label: "Email")) {
-          helpers.safe_join([
-            helpers.render(DesignSystem::UI::Primitives::LabelComponent.new(text: "Operator", for_id: "email_operator")),
-            helpers.render(
-              DesignSystem::UI::Primitives::SelectComponent.new(
-                name: :email_operator,
-                options: [
-                  {label: "Contains", value: "contains"},
-                  {label: "Equals", value: "eq"}
-                ],
-                value: params[:email_operator] || "contains",
-                classes: "u-mb-sm"
-              )
-            ),
-            helpers.render(
-              DesignSystem::UI::Primitives::InputComponent.new(
-                name: :email_query,
-                label: "Email",
-                value: params[:email_query],
-                placeholder: "customer@example.com"
-              )
+      helpers.render(DesignSystem::UI::Composites::FilterBarComponent.new) {
+        helpers.safe_join([
+          helpers.render(
+            DesignSystem::UI::Primitives::InputComponent.new(
+              name: :email_query,
+              label: "Email",
+              value: params[:email_query],
+              placeholder: "customer@example.com"
             )
-          ])
-        },
-        helpers.render(DesignSystem::UI::Composites::FilterGroupComponent.new(label: "Name")) {
+          ),
+          helpers.render(
+            DesignSystem::UI::Primitives::SelectComponent.new(
+              name: :email_operator,
+              label: "Operator",
+              options: [
+                {label: "Contains", value: "contains"},
+                {label: "Equals", value: "eq"}
+              ],
+              value: params[:email_operator] || "contains"
+            )
+          ),
           helpers.render(
             DesignSystem::UI::Primitives::InputComponent.new(
               name: :name_query,
@@ -42,16 +40,25 @@ ActiveAdmin.register Customer::Record, as: "Customer" do
               value: params[:name_query],
               placeholder: "Customer name"
             )
+          ),
+          helpers.render(
+            DesignSystem::UI::Primitives::ButtonComponent.new(
+              label: "Apply",
+              type: :submit,
+              variant: :primary,
+              classes: "ds-button--sm"
+            )
+          ),
+          helpers.render(
+            DesignSystem::UI::Primitives::LinkComponent.new(
+              label: "Clear",
+              href: helpers.admin_customers_path,
+              variant: :subtle,
+              size: :sm
+            )
           )
-        },
-        helpers.content_tag(:div, class: "u-mt-sm") {
-          helpers.safe_join([
-            helpers.render(DesignSystem::UI::Primitives::ButtonComponent.new(label: "Apply filters", type: :submit, variant: :primary)),
-            helpers.tag.span(" "),
-            helpers.render(DesignSystem::UI::Primitives::LinkComponent.new(label: "Clear", href: helpers.admin_customers_path, variant: :subtle, size: :sm))
-          ])
-        }
-      ])
+        ])
+      }
     }
 
     columns = [
@@ -72,7 +79,9 @@ ActiveAdmin.register Customer::Record, as: "Customer" do
       }
     end
 
-    table_markup = helpers.render(DesignSystem::UI::Components::TableComponent.new(columns: columns, rows: rows, empty_state: "No customers yet")) { |row, column|
+    empty_state = filters_active ? "No results match your filters" : "No customers found"
+
+    table_markup = helpers.render(DesignSystem::UI::Components::TableComponent.new(columns: columns, rows: rows, empty_state: empty_state)) { |row, column|
       if column[:key] == :actions
         helpers.render(
           DesignSystem::UI::Primitives::LinkComponent.new(
@@ -89,18 +98,8 @@ ActiveAdmin.register Customer::Record, as: "Customer" do
 
     text_node helpers.render(DesignSystem::UI::Components::PageComponent.new) {
       helpers.safe_join([
-        helpers.render(DesignSystem::UI::Components::PageHeaderComponent.new(title: "Customers")) {
-          helpers.render(
-            DesignSystem::UI::Primitives::LinkComponent.new(
-              label: "New Customer",
-              href: helpers.new_admin_customer_path,
-              variant: :default,
-              size: :sm
-            )
-          )
-        },
         helpers.render(DesignSystem::UI::Components::SectionComponent.new(title: "Filters")) { filter_form },
-        helpers.render(DesignSystem::UI::Components::SectionComponent.new) { table_markup }
+        table_markup
       ])
     }
   end

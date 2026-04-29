@@ -13,11 +13,22 @@ body.active_admin {
 
 body.active_admin #header {
   background: linear-gradient(120deg, var(--ds-color-brand-strong, #0f4e5a), var(--ds-color-brand, #16697a));
+  min-height: 3rem;
 }
 
 body.active_admin #header h1.site_title,
 body.active_admin #header ul.tabs > li > a {
   color: #ffffff;
+}
+
+body.active_admin #header h1.site_title {
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+body.active_admin #header ul.tabs > li > a {
+  padding-top: 0.55rem;
+  padding-bottom: 0.55rem;
 }
 
 body.active_admin .panel,
@@ -32,14 +43,67 @@ body.active_admin a.button {
   border-radius: var(--ds-radius-sm, 0.375rem);
 }
 
-body.active_admin.admin_customers.index #title_bar h2 {
-  display: none;
-}
-
 body.active_admin.admin_customers.index #title_bar {
   padding-bottom: 0;
 }
 
+body.active_admin.admin_customers.index #title_bar #titlebar_left,
+body.active_admin.admin_customers.index #title_bar #titlebar_right,
+body.active_admin.admin_customers.index .index_as_table,
+body.active_admin.admin_customers.index #index_footer {
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+body.active_admin.admin_customers.index .index_as_table {
+  padding-left: var(--ds-space-md, 1rem);
+  padding-right: var(--ds-space-md, 1rem);
+}
+
+body.active_admin.admin_customers.index #title_bar #titlebar_left {
+  padding-left: var(--ds-space-md, 1rem);
+  padding-right: var(--ds-space-md, 1rem);
+}
+
+body.active_admin.admin_customers.index #title_bar #titlebar_right {
+  padding-right: var(--ds-space-md, 1rem);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+body.active_admin.admin_customers.index #title_bar #titlebar_right .action_items {
+  margin-left: auto;
+}
+
+body.active_admin.admin_customers.index #title_bar #titlebar_right .action_item a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--ds-color-brand, #16697a);
+  border-radius: var(--ds-radius-sm, 0.375rem);
+  background: var(--ds-color-brand, #16697a);
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+body.active_admin.admin_customers.index #title_bar #titlebar_right .action_item a:hover {
+  border-color: var(--ds-color-brand-strong, #0f4e5a);
+  background: var(--ds-color-brand-strong, #0f4e5a);
+}
+
 body.active_admin.admin_customers.index #title_bar .breadcrumb {
   margin-bottom: 0.5rem;
+  color: #6f8091;
+  font-size: 0.8rem;
+}
+
+body.active_admin.admin_customers.index #index_footer {
+  margin-top: 0.75rem;
+  padding-left: var(--ds-space-md, 1rem);
+  padding-right: var(--ds-space-md, 1rem);
 }
