@@ -95,7 +95,7 @@ jobs:
           working-directory: packages/customer_core
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "22"
           cache: npm
@@ -224,7 +224,7 @@ jobs:
           working-directory: packages/customer_core
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "22"
           cache: npm
