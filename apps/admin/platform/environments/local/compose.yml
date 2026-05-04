@@ -1,0 +1,28 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: admin-postgres
+    env_file:
+      - ./env/${ENV_PROFILE:-dev}/db.env
+    ports:
+      - ${POSTGRES_PORT:-5433}:5432
+    volumes:
+      - admin_pg_data:/var/lib/postgresql/data
+      - ../../artifacts/containers/db/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${PROJECT_DB_PREFIX:-customers_manager_system}_development"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  worker:
+    image: contribsys/faktory:latest
+    container_name: admin-worker
+    env_file:
+      - ./env/${ENV_PROFILE:-dev}/worker.env
+    ports:
+      - ${FAKTORY_PORT:-7419}:7419
+      - ${FAKTORY_WEB_PORT:-7420}:7420
+
+volumes:
+  admin_pg_data:

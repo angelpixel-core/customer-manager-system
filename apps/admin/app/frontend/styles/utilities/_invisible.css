@@ -1,0 +1,10 @@
+/* -------- VISIBILIDAD / FLOW -------- */
+
+/**
+ * .invisible
+ * Oculta el elemento del renderizado visual pero mantiene su espacio en el layout.
+ * Útil para mostrar/ocultar sin alterar flujo.
+ */
+.invisible {
+  visibility: hidden;
+}

@@ -1,0 +1,6 @@
+/*
+ * Root stylesheet for the Vite frontend entrypoint.
+ * Keep imports layered from foundation to utilities.
+ */
+@import "./base/_index.css";
+@import "./utilities/_index.css";
