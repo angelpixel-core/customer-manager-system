@@ -1,0 +1,8 @@
+--output-dir docs/yard
+--protected
+--private
+--readme README.md
+app/admin/**/*.rb
+app/controllers/**/*.rb
+app/models/**/*.rb
+app/workers/**/*.rb

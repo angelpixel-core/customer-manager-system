@@ -1,0 +1,9 @@
+/* -------- VISIBILIDAD / FLOW -------- */
+
+/**
+ * .no-scroll
+ * Previene el scroll vertical (ej: al abrir modales).
+ */
+.no-scroll {
+  overflow: hidden;
+}

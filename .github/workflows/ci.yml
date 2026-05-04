@@ -1,0 +1,333 @@
+name: CI
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/**"
+      - "apps/admin/**"
+      - "packages/customer_core/**"
+  push:
+    branches:
+      - main
+      - development
+      - "feat/**"
+      - "fix/**"
+      - "epic/**"
+      - "story/**"
+    paths:
+      - ".github/workflows/**"
+      - "apps/admin/**"
+      - "packages/customer_core/**"
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  core-tests:
+    name: Core tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: packages/customer_core
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "4.0.3"
+          bundler-cache: true
+          working-directory: packages/customer_core
+
+      - name: Run core specs
+        run: bundle exec rspec
+
+  admin-quality-security:
+    name: Admin quality and security
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/customers_manager_system_test
+    services:
+      postgres:
+        image: postgres:16
+        ports:
+          - "5432:5432"
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: customers_manager_system_test
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    defaults:
+      run:
+        working-directory: apps/admin
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "4.0.3"
+          bundler-cache: true
+          working-directory: apps/admin
+
+      - name: Set up Ruby (core)
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "4.0.3"
+          bundler-cache: true
+          working-directory: packages/customer_core
+
+      - name: Set up Ruby (core)
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "4.0.3"
+          bundler-cache: true
+          working-directory: packages/customer_core
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/admin/package-lock.json
+
+      - name: Run admin CI pipeline
+        run: bin/ci
+
+  admin-reek:
+    name: Admin Reek (baseline)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: apps/admin
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "4.0.3"
+          bundler-cache: true
+          working-directory: apps/admin
+
+      - name: Reek full report (visibility)
+        continue-on-error: true
+        run: bundle exec reek app lib --format github --no-progress
+
+      - name: Reek changed Ruby files (blocking)
+        if: github.event_name == 'pull_request'
+        run: |
+          CHANGED=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep '^\(apps/admin/\)\?\(app\|lib\)/.*\.rb$' || true)
+          if [ -z "$CHANGED" ]; then
+            echo "No changed Ruby files under apps/admin/app or apps/admin/lib"
+            exit 0
+          fi
+
+          RELATIVE=()
+          while IFS= read -r file; do
+            [ -z "$file" ] && continue
+            file="${file#./}"
+            file="${file#apps/admin/}"
+            RELATIVE+=("$file")
+          done <<< "$CHANGED"
+
+          if [ ${#RELATIVE[@]} -eq 0 ]; then
+            echo "No changed Ruby files after normalization"
+            exit 0
+          fi
+
+          echo "Checking changed files: ${RELATIVE[*]}"
+          bundle exec reek --no-progress --force-exclusion "${RELATIVE[@]}"
+
+  admin-rubycritic:
+    name: Admin RubyCritic (baseline)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    continue-on-error: true
+    defaults:
+      run:
+        working-directory: apps/admin
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "4.0.3"
+          bundler-cache: true
+          working-directory: apps/admin
+
+      - name: Generate RubyCritic HTML report
+        run: bundle exec rubycritic app lib --no-browser --path tmp/rubycritic-ci
+
+      - name: Upload RubyCritic artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rubycritic-admin-report
+          path: apps/admin/tmp/rubycritic-ci
+          if-no-files-found: error
+
+  admin-gates:
+    name: Admin layered gates
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/customers_manager_system_test
+      N8N_WEBHOOK_URL: https://example.com/webhook
+    services:
+      postgres:
+        image: postgres:16
+        ports:
+          - "5432:5432"
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: customers_manager_system_test
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Ruby (admin)
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "4.0.3"
+          bundler-cache: true
+          working-directory: apps/admin
+
+      - name: Set up Ruby (core)
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "4.0.3"
+          bundler-cache: true
+          working-directory: packages/customer_core
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/admin/package-lock.json
+
+      - name: Install node modules
+        run: npm ci
+        working-directory: apps/admin
+
+      - name: Prepare admin test DB
+        run: bundle exec rails db:prepare
+        working-directory: apps/admin
+
+      - name: Run layered gate checks
+        run: bin/gates
+        working-directory: apps/admin
+
+  core-yard:
+    name: Core YARD (non-blocking)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    continue-on-error: true
+    defaults:
+      run:
+        working-directory: packages/customer_core
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "4.0.3"
+          bundler-cache: true
+          working-directory: packages/customer_core
+
+      - name: Build YARD docs
+        run: bundle exec yard doc --no-progress --quiet
+
+      - name: Upload core YARD artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: yard-core-docs
+          path: packages/customer_core/docs/yard
+          if-no-files-found: error
+
+  design-system-yard:
+    name: Design system YARD (non-blocking)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    continue-on-error: true
+    defaults:
+      run:
+        working-directory: packages/design_system
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "4.0.3"
+          bundler-cache: true
+          working-directory: packages/design_system
+
+      - name: Build YARD docs
+        run: bundle exec yard doc --no-progress --quiet
+
+      - name: Upload design system YARD artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: yard-design-system-docs
+          path: packages/design_system/docs/yard
+          if-no-files-found: error
+
+  admin-yard:
+    name: Admin YARD (non-blocking)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    continue-on-error: true
+    defaults:
+      run:
+        working-directory: apps/admin
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "4.0.3"
+          bundler-cache: true
+          working-directory: apps/admin
+
+      - name: Build YARD docs
+        run: bundle exec yard doc --no-progress --quiet
+
+      - name: Upload admin YARD artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: yard-admin-docs
+          path: apps/admin/docs/yard
+          if-no-files-found: error
