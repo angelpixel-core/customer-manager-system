@@ -1,0 +1,8 @@
+@font-face {
+  font-family: Delicious;
+  src: url("@fonts/DeliciousHandrawn-Regular.ttf");
+}
+
+@theme {
+  --font-delic: Delicious, serif;
+}

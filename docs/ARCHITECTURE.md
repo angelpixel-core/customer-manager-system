@@ -37,6 +37,100 @@ repo/
 │   └── DECISIONS/
 ```
 
+# 🧭 North-Star Architecture (Target)
+
+This section defines the target architecture for medium-term evolution.
+The sections below document the current implementation state.
+
+Status convention in this document:
+
+- `Implemented today`: already in code and used in runtime flow.
+- `Target / pending`: planned architecture not fully implemented yet.
+
+```
+repo/
+├── apps/
+│   └── admin/
+│       ├── app/
+│       │   ├── controllers/
+│       │   ├── models/                     # ActiveRecord only
+│       │   ├── admin/infrastructure/       # adapters (repo + event publishing)
+│       │   ├── workers/admin/infrastructure/
+│       │   ├── services/                   # optional orchestration (target/pending; not implemented today)
+│       │   └── presenters/
+│       ├── config/
+│       │   ├── initializers/
+│       │   │   ├── customer_core.rb        # dependency wiring
+│       │   │   ├── faktory.rb
+│       │   │   └── rodauth.rb
+│       │   └── routes.rb
+│       └── db/
+│           ├── migrate/
+│           ├── schema.rb
+│           └── seeds.rb
+│
+├── packages/
+│   └── customer_core/
+│       ├── lib/
+│       │   ├── customer_core.rb            # Zeitwerk entrypoint
+│       │   └── customer_core/
+│       │       ├── version.rb
+│       │       ├── domain/                 # pure business rules
+│       │       │   ├── customer.rb
+│       │       │   ├── value_objects/
+│       │       │   ├── policies/
+│       │       │   └── services/           # optional domain services (target/pending)
+│       │       ├── application/            # use cases + ports
+│       │       │   ├── use_cases/
+│       │       │   │   └── customer/
+│       │       │   │       ├── create.rb
+│       │       │   │       ├── update.rb
+│       │       │   │       └── delete.rb
+│       │       │   ├── commands/
+│       │       │   ├── queries/
+│       │       │   ├── interfaces/
+│       │       │   │   ├── customer/repository.rb
+│       │       │   │   ├── events/publisher.rb
+│       │       │   │   ├── events/dead_letter_store.rb
+│       │       │   │   ├── events/event_bus.rb     # facade estable sobre Publisher (implemented)
+│       │       │   │   ├── notifier.rb
+│       │       │   │   └── logger.rb
+│       │       │   └── dto/
+│       │       └── events/
+│       │           └── customer/
+│       │               ├── created.rb
+│       │               ├── updated.rb
+│       │               └── deleted.rb
+│       ├── spec/
+│       │   ├── domain/
+│       │   └── application/
+│       └── customer_core.gemspec
+│
+├── platform/
+│   ├── events/
+│   ├── observability/
+│   └── integrations/
+│
+└── docs/
+    ├── ARCHITECTURE.md
+    ├── DEMO_RUNBOOK.md
+    └── DECISIONS/
+```
+
+North-star naming:
+
+```rb
+CustomerCore::Domain::Customer
+CustomerCore::Application::UseCases::Customer::Create
+CustomerCore::Application::Interfaces::Customer::Repository
+CustomerCore::Application::Interfaces::Events::EventBus
+CustomerCore::Application::Interfaces::Events::Publisher
+CustomerCore::Application::Interfaces::Notifier
+CustomerCore::Events::Customer::Created
+Admin::Infrastructure::Repositories::ActiveRecord::CustomerRepository
+Admin::Infrastructure::Events::FaktoryEventBus
+```
+
 # 🧬 📦 Domain Package (customer_core)
 
 ```
@@ -46,41 +140,21 @@ packages/customer_core/
 │
 │   └── customer_core/
 │       ├── version.rb
-│
-│       # 🧠 DOMAIN (pure)
 │       ├── domain/
-│       │   ├── customer.rb
-│       │   ├── value_objects/
-│       │   ├── policies/
-│       │   └── services/
-│
-│       # 🎯 APPLICATION (use cases)
+│       │   └── customer.rb
 │       ├── application/
-│       │   ├── use_cases/
-│       │   │   ├── create_customer.rb
-│       │   │   ├── update_customer.rb
-│       │   │   └── delete_customer.rb
-│       │
-│       │   ├── commands/
-│       │   ├── queries/
-│       │
-│       │   ├── interfaces/           # PORTS
-│       │   │   ├── repositories/
-│       │   │   ├── event_bus.rb
-│       │   │   ├── notifier.rb
-│       │   │   └── logger.rb
-│       │
-│       │   └── dto/
-│
-│       # 📡 EVENTS (domain events)
-│       ├── events/
-│       │   ├── customer_created.rb
-│       │   ├── customer_updated.rb
-│       │   └── customer_deleted.rb
+│       │   └── use_cases/
+│       │       └── customer/
+│       │           └── create.rb
+│       └── events/
+│           └── customer/
+│               └── created.rb
 │
 │       # 🔌 NO infrastructure here (important)
 │
 ├── spec/                             # pure domain tests (no Rails)
+│   ├── domain/customer/customer_spec.rb
+│   └── application/customer/create_spec.rb
 ├── customer_core.gemspec
 ```
 
@@ -88,10 +162,43 @@ packages/customer_core/
 
 ```rb
 CustomerCore::Domain::Customer
-CustomerCore::Application::UseCases::CreateCustomer
-CustomerCore::Application::Interfaces::CustomerRepository
-CustomerCore::Events::CustomerCreated
+CustomerCore::Application::UseCases::Customer::Create
+CustomerCore::Events::Customer::Created
 ```
+
+# 🧰 Callable Interface (`#call`)
+
+Use `#call` as the standard interface for action objects.
+
+Apply to:
+
+- `packages/customer_core/.../application/use_cases/**`
+- delivery-layer orchestration services (if explicitly introduced; not synonym of use case)
+
+Do not force `#call` in:
+
+- domain entities/value objects
+- repositories/events
+- workers (`perform`)
+- ActiveRecord models
+
+Callable convention:
+
+```rb
+class SomeAction
+  def self.call(...)
+    new(...).call
+  end
+end
+```
+
+# ✅ Result Convention (Ports/Interfaces)
+
+Application ports/interfaces return `CustomerCore::Application::Result`.
+
+- `Success(value)` for successful operations.
+- `Failure(code:, message:, cause:)` for expected adapter/application failures.
+- Do not use exceptions as normal control flow between use cases and adapters.
 
 # 🚀 🧩 Rails App (apps/admin)
 
@@ -99,34 +206,27 @@ CustomerCore::Events::CustomerCreated
 apps/admin/
 ├── app/
 │   ├── controllers/
-│   │   └── admin/
-│
-│   ├── admin/                        # ActiveAdmin
-│
-│   ├── models/                       # ActiveRecord ONLY
-│
-│   ├── repositories/                 # adapters
-│   │   └── active_record/
-│
-│   ├── events/                       # adapters
-│   │   ├── sync_event_bus.rb
-│   │   └── faktory_event_bus.rb
-│
-│   ├── workers/                      # Faktory workers
-│
-│   ├── services/                     # orchestration (optional)
-│
-│   ├── integrations/
-│   │   ├── n8n/
-│   │   └── webhooks/
-│
-│   └── presenters/
+│   │   └── customers_controller.rb
+│   ├── models/
+│   │   └── customer/record.rb
+│   ├── admin/
+│   │   └── infrastructure/
+│   │       ├── repositories/active_record/customer_repository.rb
+│   │       ├── events/faktory_event_bus.rb
+│   │       ├── events/rails_dead_letter_store.rb
+│   │       └── logging/rails_logger.rb
+│   └── workers/
+│       └── admin/infrastructure/send_welcome_email_worker.rb
 │
 ├── config/
 │   ├── initializers/
-│   │   ├── customer_core.rb          # wiring dependencies
 │   │   ├── faktory.rb
 │   │   └── rodauth.rb
+│   └── routes.rb
+├── db/
+│   ├── migrate/
+│   ├── schema.rb
+│   └── seeds.rb
 ```
 
 # 🔌 🧠 Dependency Wiring (CRITICAL)
@@ -135,22 +235,111 @@ apps/admin/
 apps/admin/config/initializers/customer_core.rb
 ```
 
-# ⚡ 📡 Event System (SYNC + ASYNC)
+# 🎨 UI Layout Foundation (Current)
+
+The `feat(ui): add clean application layout foundation` commit introduced
+the first reusable visual foundation for non-ActiveAdmin pages in `apps/admin`.
+
+## Scope
+
+- Keep business flow unchanged (only presentation layer changes)
+- Centralize frontend CSS entry through Vite
+- Establish a layered style architecture (tokens → reset → layout → primitives → utilities)
+
+## Files and Conventions
+
+```
+apps/admin/app/frontend/
+├── entrypoints/
+│   └── application.js                # imports ../styles/application.css
+└── styles/
+    ├── application.css               # root style entrypoint
+    ├── base/
+    │   ├── _index.css                # base import order
+    │   ├── _variables.css            # design tokens (spacing, radius, shadows)
+    │   ├── _theme.css                # semantic color palette
+    │   ├── _reset.css                # global reset + motion accessibility
+    │   ├── _layout.css               # app-shell, topbar, container, form defaults
+    │   └── primitives/
+    │       ├── _button.css
+    │       ├── _link.css
+    │       └── _nav.css
+    └── utilities/
+        └── _index.css
+```
+
+## Layout Contract
+
+`apps/admin/app/views/layouts/application.html.erb` now renders a shell with:
+
+- `.app-shell`
+- `.app-topbar` (brand + primary nav)
+- `.app-main`
+- `.app-container`
+- `.surface-card`
+
+This is the baseline contract for upcoming componentization work (ViewComponent + Lookbook).
+
+# ⚡ 📡 Event Publishing
+
+## Implemented today
+
+```sh
+packages/customer_core/lib/customer_core/application/interfaces/
+├── events/
+│   ├── publisher.rb
+│   ├── dead_letter_store.rb
+│   └── event_bus.rb
+├── notifier.rb
+└── logger.rb
+
+apps/admin/app/admin/infrastructure/
+├── events/
+│   ├── faktory_event_bus.rb
+│   └── rails_dead_letter_store.rb
+├── notifications/
+│   └── rails_notifier.rb
+└── logging/
+    └── rails_logger.rb
+
+apps/admin/lib/platform/events/
+├── event.rb
+├── event_bus.rb
+├── registry.rb
+├── retry_handler.rb
+├── dead_letter_queue.rb
+└── metrics.rb
+
+apps/admin/lib/platform/integrations/
+├── serializers/
+│   ├── event_serializer.rb
+│   └── customer_created.rb
+└── n8n/
+    ├── client.rb
+    └── event_forwarder.rb
+
+apps/admin/app/models/platform/events/
+└── dead_letter_record.rb
+```
+
+## Target / pending
 
 ```sh
 platform/events/
-├── event.rb
-├── event_bus.rb
+├── event.rb                              # TODO: pendiente contrato base de evento cross-context
+├── event_bus.rb                          # TODO: pendiente mover/adaptar implementacion local de apps/admin/lib/platform/events
 ├── sync/
-│   └── in_memory_event_bus.rb
-│
+│   └── in_memory_event_bus.rb            # TODO: pendiente implementación para desarrollo/tests integrados
 ├── async/
-│   ├── faktory_event_bus.rb
-│   └── retry_handler.rb
-│
-├── serializers/
-├── registry/
-└── dead_letter_queue/
+│   ├── faktory_event_bus.rb              # TODO: pendiente mover/adaptar desde admin/infrastructure/events/faktory_event_bus.rb
+│   └── retry_handler.rb                  # TODO: pendiente mover/adaptar desde apps/admin/lib/platform/events/retry_handler.rb
+├── serializers/                          # TODO: pendiente serialización de integration events
+├── registry/                             # TODO: pendiente mover/adaptar desde apps/admin/lib/platform/events/registry.rb
+└── dead_letter_queue/                    # TODO: pendiente mover/adaptar desde apps/admin/lib/platform/events/dead_letter_queue.rb
+
+platform/integrations/
+├── serializers/                          # TODO: pendiente mover/adaptar desde apps/admin/lib/platform/integrations/serializers
+└── n8n/                                  # TODO: pendiente mover/adaptar desde apps/admin/lib/platform/integrations/n8n
 ```
 
 # 🧠 Flow
@@ -160,7 +349,9 @@ Use Case
   ↓
 Domain Event
   ↓
-Event Bus
+EventBus facade
+  ↓
+Publisher adapter
   ↓
 Handlers
   ↓
@@ -194,7 +385,9 @@ platform/integrations/
 ```
 CustomerCreated
   ↓
-Event Bus
+EventBus facade
+  ↓
+Publisher (FaktoryEventBus)
   ↓
 Forward to n8n
   ↓
