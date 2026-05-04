@@ -1,0 +1,42 @@
+---
+# Stage 1 (Reek) baseline configuration.
+# Rationale:
+# - We disable framework-noisy smells that are low-signal for this codebase
+#   (`IrresponsibleModule`, `UtilityFunction`) to focus on actionable design debt.
+# - We keep complexity/coupling smells enabled to prevent new architectural debt.
+
+exclude_paths:
+  - db/migrate
+  - node_modules
+  - vendor
+  # Stage-1 baseline: known legacy hotspots to be cleaned iteratively.
+  - app/admin/customers.rb
+  - app/admin/infrastructure/events/faktory_event_bus.rb
+  - app/admin/infrastructure/events/rails_dead_letter_store.rb
+  - lib/platform/events/dead_letter_queue.rb
+  - lib/platform/events/event_bus.rb
+  - lib/platform/events/metrics.rb
+  - lib/platform/events/registry.rb
+  - lib/platform/integrations/n8n/client.rb
+  - lib/platform/integrations/n8n/event_forwarder.rb
+  - lib/platform/integrations/serializers/customer_created.rb
+
+detectors:
+  IrresponsibleModule:
+    enabled: false
+
+  UtilityFunction:
+    enabled: false
+
+  UncommunicativeVariableName:
+    accept:
+      - e
+      - r
+
+directories:
+  "app/admin/infrastructure/events":
+    TooManyStatements:
+      max_statements: 8
+  "lib/platform/events":
+    TooManyStatements:
+      max_statements: 12

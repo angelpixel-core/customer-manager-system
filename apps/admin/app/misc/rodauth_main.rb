@@ -134,6 +134,9 @@ class RodauthMain < Rodauth::Rails::Auth
     # Redirect to home page after logout.
     logout_redirect "/"
 
+    # Redirect to admin dashboard after login.
+    login_redirect "/admin"
+
     # Redirect to wherever login redirects to after account verification.
     verify_account_redirect { login_redirect }
 
