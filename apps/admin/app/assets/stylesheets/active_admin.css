@@ -1,0 +1,33 @@
+/*
+ * Temporary ActiveAdmin stylesheet placeholder for Propshaft.
+ *
+ * ActiveAdmin's default generated stylesheet is SCSS (`active_admin.scss`),
+ * but Propshaft does not transpile SCSS by default.
+ * This file prevents runtime 500 errors caused by missing `active_admin.css`.
+ */
+
+body.active_admin {
+  font-family: var(--ds-font-sans, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif);
+  background: var(--ds-color-bg, #f6f8fb);
+}
+
+body.active_admin #header {
+  background: linear-gradient(120deg, var(--ds-color-brand-strong, #0f4e5a), var(--ds-color-brand, #16697a));
+}
+
+body.active_admin #header h1.site_title,
+body.active_admin #header ul.tabs > li > a {
+  color: #ffffff;
+}
+
+body.active_admin .panel,
+body.active_admin .index_as_table table {
+  border-radius: var(--ds-radius-md, 0.625rem);
+  border: 1px solid var(--ds-color-border, #d4deea);
+  overflow: hidden;
+}
+
+body.active_admin .button,
+body.active_admin a.button {
+  border-radius: var(--ds-radius-sm, 0.375rem);
+}

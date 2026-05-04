@@ -1,0 +1,17 @@
+/* -------- A11Y / ACCESSIBILIDAD -------- */
+
+/**
+ * .visually-hidden
+ * Variante sin !important para mayor flexibilidad.
+ * Oculta el contenido del DOM visual pero lo mantiene accesible.
+ */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

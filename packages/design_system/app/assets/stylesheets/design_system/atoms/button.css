@@ -1,0 +1,30 @@
+.ds-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-space-xs);
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--ds-color-border);
+  border-radius: var(--ds-radius-md);
+  background: var(--ds-color-surface);
+  color: var(--ds-color-text);
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ds-button:hover {
+  border-color: var(--ds-color-brand);
+  background: var(--ds-color-brand-soft);
+}
+
+.ds-button--primary {
+  border-color: var(--ds-color-brand);
+  background: var(--ds-color-brand);
+  color: #ffffff;
+}
+
+.ds-button--primary:hover {
+  border-color: var(--ds-color-brand-strong);
+  background: var(--ds-color-brand-strong);
+}
