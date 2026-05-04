@@ -1,0 +1,15 @@
+.ds-panel {
+  border: 1px solid var(--ds-color-border);
+  border-radius: var(--ds-radius-lg);
+  background: var(--ds-color-surface);
+  padding: var(--ds-space-lg);
+}
+
+.ds-panel__title {
+  margin: 0 0 var(--ds-space-sm);
+  font-size: 1.2rem;
+}
+
+.ds-panel__body {
+  color: var(--ds-color-text-muted);
+}

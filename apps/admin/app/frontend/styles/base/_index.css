@@ -1,0 +1,10 @@
+/*
+ * Base layer import order:
+ * 1) tokens, 2) reset, 3) layout primitives, 4) UI primitives, 5) theme mapping.
+ */
+@import "./_variables.css";
+@import "./_reset.css";
+@import "./_layout.css";
+@import "./primitives/_index.css";
+@import "./_theme.css";
+/* @import "./_fonts.css"; */
